@@ -1,0 +1,1640 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SROIImpact — Portafolio Xignux</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f8f7f4;color:#1a1a1a;min-height:100vh}
+:root{
+  --pri:#1B3A5C;--pri-light:#2D5F8A;--acc:#E8A020;--acc-light:#F5C260;
+  --teal:#0F6E56;--teal-light:#1D9E75;--surface:#fff;--bg:#f8f7f4;
+  --border:#e2ddd6;--text:#1a1a1a;--muted:#6b6b6b;--success:#3B6D11;
+  --danger:#A32D2D;--radius:10px;--radius-lg:14px;
+  --env:#1a5c3a;--env-light:#2a7f53;
+  --health:#7B2D8B;--health-light:#A044B4;
+  --emp:#8B4513;--emp-light:#B5651D;
+  --red-l:#E24B4A;--amb:#854F0B;--amb-l:#EF9F27;
+  --ben:#1a3a5c;
+}
+.ti-svg{display:inline-flex;align-items:center;vertical-align:middle}
+.ti-svg svg{width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.nav{background:var(--pri);padding:0 1.5rem;display:flex;align-items:center;gap:1.5rem;height:56px;position:sticky;top:0;z-index:200}
+.nav-brand{color:#fff;font-weight:700;font-size:1.1rem;letter-spacing:.5px;display:flex;align-items:center;gap:.5rem;flex-shrink:0}
+.nav-brand span{color:var(--acc-light)}
+.nav-tabs{display:flex;gap:.2rem;flex:1;flex-wrap:wrap}
+.nav-tab{color:rgba(255,255,255,.65);padding:.45rem .85rem;border-radius:6px;cursor:pointer;font-size:.8rem;font-weight:500;transition:all .15s;border:none;background:transparent;white-space:nowrap}
+.nav-tab:hover{color:#fff;background:rgba(255,255,255,.1)}
+.nav-tab.active{color:#fff;background:rgba(255,255,255,.18)}
+.page{display:none;padding:1.75rem;max-width:1150px;margin:0 auto}
+.page.active{display:block}
+.hero{background:var(--pri);border-radius:var(--radius-lg);padding:2.5rem;color:#fff;margin-bottom:2rem;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;right:-60px;top:-60px;width:300px;height:300px;border-radius:50%;background:rgba(255,255,255,.04)}
+.hero-title{font-size:1.8rem;font-weight:700;margin-bottom:.5rem}
+.hero-title span{color:var(--acc-light)}
+.hero-sub{color:rgba(255,255,255,.7);font-size:.95rem;max-width:600px;line-height:1.6}
+.hero-badge{display:inline-flex;align-items:center;gap:.4rem;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:.78rem;padding:.3rem .8rem;border-radius:20px;margin-bottom:1rem}
+.steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:2rem}
+.step-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem}
+.step-num{width:32px;height:32px;border-radius:50%;background:var(--pri);color:#fff;font-weight:700;font-size:.85rem;display:flex;align-items:center;justify-content:center;margin-bottom:.75rem}
+.step-title{font-weight:600;font-size:.9rem;color:var(--pri);margin-bottom:.4rem}
+.step-desc{font-size:.8rem;color:var(--muted);line-height:1.5}
+.cat-filter{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1.75rem}
+.cat-pill{padding:.5rem 1.1rem;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);cursor:pointer;font-size:.83rem;font-weight:600;color:var(--muted);transition:all .15s;display:flex;align-items:center;gap:.45rem}
+.cat-pill:hover{border-color:var(--pri-light);color:var(--pri)}
+.cat-pill.active-edu{background:var(--pri);border-color:var(--pri);color:#fff}
+.cat-pill.active-env{background:var(--env);border-color:var(--env);color:#fff}
+.cat-pill.active-health{background:var(--health);border-color:var(--health);color:#fff}
+.cat-pill.active-emp{background:var(--emp);border-color:var(--emp);color:#fff}
+.cat-pill.active-all{background:#444;border-color:#444;color:#fff}
+.cat-pill .bpill{font-size:.65rem;background:rgba(255,255,255,.25);padding:1px 6px;border-radius:10px;margin-left:.1rem}
+.cat-section{margin-bottom:2rem}
+.cat-section-header{display:flex;align-items:center;gap:.65rem;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1.5px solid var(--border)}
+.cat-section-title{font-size:.95rem;font-weight:700;color:var(--pri)}
+.cat-section-title.env{color:var(--env)}.cat-section-title.health{color:var(--health)}.cat-section-title.emp{color:var(--emp)}
+.cat-section-pill{font-size:.7rem;font-weight:600;padding:.2rem .6rem;border-radius:20px}
+.cat-section-pill.edu{background:#EDF2FA;color:var(--pri)}.cat-section-pill.env{background:#E1F5EE;color:var(--env)}
+.cat-section-pill.health{background:#F5EAF9;color:var(--health)}.cat-section-pill.emp{background:#FAF0E6;color:var(--emp)}
+.proj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1.1rem}
+.proj-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1.4rem;cursor:pointer;transition:all .15s}
+.proj-card:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.07)}
+.proj-card.edu-card:hover{border-color:var(--pri-light)}.proj-card.env-card:hover{border-color:var(--env-light)}
+.proj-card.health-card:hover{border-color:var(--health-light)}.proj-card.emp-card:hover{border-color:var(--emp-light)}
+.proj-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:.7rem}
+.proj-icon{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.proj-icon.edu{background:#EDF2FA;color:var(--pri)}.proj-icon.env{background:#E1F5EE;color:var(--env)}
+.proj-icon.health{background:#F5EAF9;color:var(--health)}.proj-icon.emp{background:#FAF0E6;color:var(--emp)}
+.proj-right{text-align:right}
+.proj-budget{font-size:.82rem;font-weight:600;color:var(--teal)}
+.proj-budget.env{color:var(--env)}.proj-budget.health{color:var(--health)}.proj-budget.emp{color:var(--emp)}
+.proj-sroi{font-size:.75rem;font-weight:700;margin-top:.2rem;padding:.15rem .5rem;border-radius:10px;display:inline-block}
+.proj-sroi.high{background:#E1F5EE;color:var(--success)}.proj-sroi.mid{background:#EDF2FA;color:var(--pri)}.proj-sroi.low{background:#FFF0F0;color:var(--danger)}
+.proj-name{font-weight:700;font-size:.93rem;color:var(--pri);margin-bottom:.2rem}
+.proj-org{font-size:.76rem;color:var(--muted)}
+.proj-stats{display:flex;gap:.75rem;margin-top:.7rem;padding-top:.7rem;border-top:0.5px solid var(--border)}
+.proj-stat{text-align:center;flex:1}
+.proj-stat-val{font-size:.9rem;font-weight:700;color:var(--pri)}
+.proj-stat-val.env{color:var(--env)}.proj-stat-val.health{color:var(--health)}.proj-stat-val.emp{color:var(--emp)}
+.proj-stat-label{font-size:.68rem;color:var(--muted)}
+.section-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem;margin-top:1rem}
+.section-title{font-size:1.05rem;font-weight:700;color:var(--pri)}
+.chart-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;margin-bottom:1.25rem}
+.chart-label{font-size:.8rem;color:var(--muted);font-weight:500;margin-bottom:.25rem}
+.chart-title{font-size:.95rem;font-weight:600;color:var(--text);margin-bottom:1rem}
+.proxy-table-wrap{overflow-x:auto;margin-bottom:1.5rem}
+table.proxy-table{width:100%;border-collapse:collapse;font-size:.8rem}
+table.proxy-table th{background:#f0f4fa;color:var(--pri);font-weight:600;padding:.6rem .75rem;text-align:left;border-bottom:1px solid var(--border)}
+table.proxy-table td{padding:.55rem .75rem;border-bottom:0.5px solid var(--border);color:var(--text)}
+table.proxy-table tr:hover td{background:#f8f7f4}
+.path-badge{display:inline-flex;align-items:center;gap:.3rem;background:#EDF2FA;color:var(--pri);font-size:.7rem;font-weight:600;padding:.2rem .5rem;border-radius:6px}
+.path-badge.teal{background:#E1F5EE;color:var(--teal)}.path-badge.amber{background:#FAEEDA;color:#854F0B}
+.path-badge.env{background:#E1F5EE;color:var(--env)}.path-badge.health{background:#F5EAF9;color:var(--health)}
+.back-btn{display:inline-flex;align-items:center;gap:.4rem;color:var(--pri);font-weight:500;font-size:.85rem;cursor:pointer;margin-bottom:1.5rem;padding:.4rem .8rem;border:0.5px solid var(--border);border-radius:6px;background:var(--surface);transition:.15s}
+.back-btn:hover{background:#EDF2FA}
+.corr-row{display:flex;align-items:center;gap:.75rem;padding:.5rem 0;border-bottom:0.5px solid var(--border)}
+.corr-label{font-size:.82rem;color:var(--text);width:260px;flex-shrink:0}
+.corr-bar-wrap{flex:1;height:13px;background:#f0f0ee;border-radius:4px;overflow:hidden}
+.corr-bar{height:100%;border-radius:4px;transition:width .6s}
+.corr-val{font-size:.82rem;font-weight:700;width:55px;text-align:right}
+.inner-tabs{display:flex;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap}
+.inner-tab{padding:.4rem 1rem;border-radius:20px;border:1px solid var(--border);background:transparent;cursor:pointer;font-size:.82rem;font-weight:500;color:var(--muted);transition:.15s}
+.inner-tab.active{background:var(--pri);color:#fff;border-color:var(--pri)}
+.inner-tab:hover:not(.active){background:#EDF2FA;color:var(--pri)}
+.inner-content{display:none}.inner-content.active{display:block}
+.sens-note{background:#FAEEDA;border-left:3px solid #EF9F27;padding:.75rem 1rem;border-radius:0 var(--radius) var(--radius) 0;font-size:.82rem;color:#633806;margin-bottom:1.25rem;line-height:1.5}
+.sens-note.env{background:#E1F5EE;border-left-color:var(--env);color:#084028}
+.sens-note.health{background:#F5EAF9;border-left-color:var(--health);color:#4a1057}
+.sens-note.emp{background:#FAF0E6;border-left-color:var(--emp);color:#5c2a00}
+.note-blue{background:#EDF2FA;border-left:3px solid var(--pri-light);padding:.7rem 1rem;border-radius:0 var(--radius) var(--radius) 0;font-size:.8rem;color:var(--pri);line-height:1.55;margin-bottom:1.25rem}
+.scenario-row{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem}
+.scenario{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:.6rem 1rem;text-align:center;flex:1;min-width:100px}
+.scenario-label{font-size:.72rem;color:var(--muted);font-weight:500}
+.scenario-val{font-size:1.15rem;font-weight:700;margin-top:.2rem}
+.scenario.pessimist .scenario-val{color:var(--danger)}.scenario.base .scenario-val{color:var(--pri)}.scenario.optimist .scenario-val{color:var(--success)}
+.home-cat-grid{display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:2rem}
+.home-cat-btn{padding:.75rem 1.5rem;border-radius:var(--radius);border:1.5px solid var(--border);background:var(--surface);cursor:pointer;font-size:.9rem;font-weight:600;color:var(--muted);transition:all .15s;display:flex;align-items:center;gap:.5rem}
+.home-cat-btn:hover{border-color:var(--pri-light);color:var(--pri)}
+.home-cat-btn.on{background:var(--pri);border-color:var(--pri);color:#fff}
+.home-cat-btn.on-env{background:var(--env);border-color:var(--env);color:#fff}
+.home-cat-btn.on-health{background:var(--health);border-color:var(--health);color:#fff}
+.home-cat-btn.on-emp{background:var(--emp);border-color:var(--emp);color:#fff}
+.home-cat-btn .hbadge{font-size:.65rem;background:rgba(255,255,255,.25);padding:1px 6px;border-radius:10px;margin-left:.25rem}
+.comparison-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:2rem}
+.comparison-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem}
+.comparison-title{font-size:1rem;font-weight:700;color:var(--pri)}
+.comparison-sub{font-size:.78rem;color:var(--muted)}
+.comp-legend{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem}
+.comp-legend-item{display:flex;align-items:center;gap:.35rem;font-size:.75rem;font-weight:600;color:var(--muted)}
+.comp-legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.comp-sort-btns{display:flex;gap:.4rem}
+.comp-sort-btn{padding:.3rem .75rem;border-radius:6px;border:1px solid var(--border);background:transparent;cursor:pointer;font-size:.75rem;font-weight:600;color:var(--muted);transition:.15s}
+.comp-sort-btn.active{background:var(--pri);color:#fff;border-color:var(--pri)}
+.comp-sort-btn:hover:not(.active){background:#EDF2FA;color:var(--pri)}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.75rem;margin-bottom:1.5rem}
+.kpi{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:.9rem 1rem}
+.kpi-label{font-size:.72rem;color:var(--muted);font-weight:500;margin-bottom:.25rem}
+.kpi-val{font-size:1.35rem;font-weight:700}
+.kpi.green .kpi-val{color:var(--teal)}.kpi.red .kpi-val{color:var(--danger)}.kpi.amb .kpi-val{color:var(--amb)}.kpi.blue .kpi-val{color:var(--pri)}
+.pareto-tabs{display:flex;gap:.4rem;margin-bottom:1.5rem;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.pareto-tab{padding:.45rem 1rem;border-radius:6px 6px 0 0;border:1px solid transparent;border-bottom:none;cursor:pointer;font-size:.81rem;font-weight:500;color:var(--muted);background:transparent;margin-bottom:-1px;transition:.15s}
+.pareto-tab.active{background:var(--surface);border-color:var(--border);color:var(--pri);font-weight:600}
+.pareto-tab:hover:not(.active){color:var(--pri)}
+.pareto-panel{display:none}.pareto-panel.active{display:block}
+.tbl-wrap{overflow-x:auto;border:0.5px solid var(--border);border-radius:var(--radius-lg);background:var(--surface);margin-bottom:1.25rem}
+table.pareto-tbl{width:100%;border-collapse:collapse;font-size:.75rem}
+table.pareto-tbl th{background:#f0f4fa;color:var(--pri);font-weight:600;padding:.5rem .6rem;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+table.pareto-tbl th.sortable{cursor:pointer;user-select:none}
+table.pareto-tbl th.sortable:hover{background:#e0eaf8}
+table.pareto-tbl td{padding:.45rem .6rem;border-bottom:0.5px solid var(--border);vertical-align:middle}
+table.pareto-tbl tr:last-child td{border-bottom:none}
+table.pareto-tbl tr:hover td{background:#f8f9fc}
+.row-front td:first-child{border-left:3px solid var(--teal)}
+.row-mid   td:first-child{border-left:3px solid var(--amb-l)}
+.row-dom   td:first-child{border-left:3px solid var(--red-l)}
+.pbadge{display:inline-block;font-size:.67rem;font-weight:600;padding:2px 6px;border-radius:10px;white-space:nowrap}
+.pbadge.front{background:#E1F5EE;color:var(--teal)}.pbadge.mid{background:#FAEEDA;color:var(--amb)}.pbadge.dom{background:#FCEBEB;color:var(--danger)}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:4px;vertical-align:middle;flex-shrink:0}
+.dot.front{background:var(--teal)}.dot.mid{background:var(--amb-l)}.dot.dom{background:var(--red-l)}
+.bar-wrap{display:flex;align-items:center;gap:4px}
+.bar-bg{width:48px;height:7px;background:#e8e6e0;border-radius:3px;overflow:hidden;flex-shrink:0}
+.bar-fill{height:100%;border-radius:3px}
+.bar-fill.teal{background:var(--teal-light)}.bar-fill.blue{background:var(--pri-light)}.bar-fill.red{background:var(--red-l)}.bar-fill.amb{background:var(--amb-l)}
+.crit-grid-par{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:1rem;margin-bottom:1.5rem}
+.crit-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1rem}
+.crit-name{font-weight:600;font-size:.85rem;color:var(--pri);margin-bottom:.25rem}
+.crit-desc{font-size:.74rem;color:var(--muted);margin-bottom:.75rem;line-height:1.5}
+.proj-score-row{display:flex;align-items:center;justify-content:space-between;padding:.25rem 0;border-bottom:0.5px solid var(--border);font-size:.76rem}
+.proj-score-row:last-child{border-bottom:none}
+.score-btns{display:flex;gap:3px}
+.score-btn{width:24px;height:24px;border-radius:4px;border:0.5px solid var(--border);background:transparent;cursor:pointer;font-size:.71rem;font-weight:600;color:var(--muted);transition:.1s;display:flex;align-items:center;justify-content:center}
+.score-btn.active{background:var(--pri);color:#fff;border-color:var(--pri)}
+.assess-hero{background:var(--pri);border-radius:var(--radius-lg);padding:1.75rem;color:#fff;margin-bottom:1.5rem}
+.assess-hero h2{font-size:1.2rem;font-weight:700;margin-bottom:.4rem}
+.assess-hero p{font-size:.85rem;color:rgba(255,255,255,.75);line-height:1.6}
+.assess-toolbar{display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:1.5rem;align-items:center}
+.assess-toolbar label{font-weight:600;font-size:.85rem;color:var(--pri)}
+.assess-toolbar select{padding:.45rem .85rem;border-radius:6px;border:1px solid var(--border);background:var(--surface);font-size:.85rem;color:var(--text);cursor:pointer}
+.apply-btn{padding:.5rem 1.25rem;border-radius:7px;background:var(--pri);color:#fff;border:none;cursor:pointer;font-size:.85rem;font-weight:600;transition:.15s}
+.apply-btn:hover{background:var(--pri-light)}
+.apply-btn:disabled{background:#aaa;cursor:not-allowed}
+.reset-btn{padding:.5rem 1rem;border-radius:7px;border:1px solid var(--border);background:var(--surface);cursor:pointer;font-size:.82rem;color:var(--muted)}
+.progress-wrap{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:.85rem 1rem;margin-bottom:1.25rem}
+.progress-bar-bg{height:10px;background:#e8e6e0;border-radius:5px;overflow:hidden;margin-top:.5rem}
+.progress-bar-fill{height:100%;border-radius:5px;background:var(--pri-light);transition:width .4s}
+.assess-summary{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;margin-bottom:1.5rem}
+.assess-sum-title{font-size:.95rem;font-weight:700;color:var(--pri);margin-bottom:1rem}
+.assess-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.65rem}
+.assess-box{background:#f8f7f4;border-radius:var(--radius);padding:.6rem .85rem}
+.assess-box-name{font-size:.72rem;font-weight:600;color:var(--muted);margin-bottom:.15rem}
+.assess-box-val{font-size:1.15rem;font-weight:700}
+.assess-box-val.s1{color:var(--danger)}.assess-box-val.s2{color:#c06000}.assess-box-val.s3{color:var(--amb)}.assess-box-val.s4{color:#2a8050}.assess-box-val.s5{color:var(--teal)}
+.assess-box-val.sinv1{color:var(--teal)}.assess-box-val.sinv2{color:#2a8050}.assess-box-val.sinv3{color:var(--amb)}.assess-box-val.sinv4{color:#c06000}.assess-box-val.sinv5{color:var(--danger)}
+.crit-section{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;margin-bottom:1rem}
+.crit-sec-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem;flex-wrap:wrap;gap:.5rem}
+.crit-sec-title{font-size:.95rem;font-weight:700;color:var(--pri)}
+.crit-sec-badge{font-size:.75rem;font-weight:600;padding:.2rem .65rem;border-radius:10px;background:#EDF2FA;color:var(--pri)}
+.crit-sec-desc{font-size:.8rem;color:var(--muted);margin-bottom:1rem;line-height:1.55;padding:.6rem .85rem;background:#f8f7f4;border-radius:6px}
+.q-list{display:flex;flex-direction:column;gap:.85rem;margin-bottom:1rem}
+.q-item{display:flex;flex-direction:column;gap:.4rem}
+.q-label{font-size:.82rem;font-weight:600;color:var(--pri)}
+.q-text{font-size:.82rem;color:var(--text);line-height:1.5}
+.q-options{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.35rem}
+.q-opt{padding:.35rem .9rem;border-radius:6px;border:1px solid var(--border);background:transparent;cursor:pointer;font-size:.78rem;font-weight:500;color:var(--muted);transition:.15s}
+.q-opt:hover{border-color:var(--pri-light);color:var(--pri)}
+.q-opt.sel{background:var(--pri);color:#fff;border-color:var(--pri)}
+.crit-result{display:flex;align-items:center;gap:.75rem;padding:.65rem 1rem;border-radius:var(--radius);margin-top:.5rem;font-size:.83rem;font-weight:600}
+.crit-result.r1{background:#FFF0F0;border-left:3px solid var(--red-l);color:var(--danger)}
+.crit-result.r2{background:#FFF5EB;border-left:3px solid #c06000;color:#c06000}
+.crit-result.r3{background:#FAEEDA;border-left:3px solid var(--amb-l);color:var(--amb)}
+.crit-result.r4{background:#EBF7F1;border-left:3px solid #2a8050;color:#2a8050}
+.crit-result.r5{background:#E1F5EE;border-left:3px solid var(--teal);color:var(--teal)}
+.crit-result.ri1{background:#E1F5EE;border-left:3px solid var(--teal);color:var(--teal)}
+.crit-result.ri2{background:#EBF7F1;border-left:3px solid #2a8050;color:#2a8050}
+.crit-result.ri3{background:#FAEEDA;border-left:3px solid var(--amb-l);color:var(--amb)}
+.crit-result.ri4{background:#FFF5EB;border-left:3px solid #c06000;color:#c06000}
+.crit-result.ri5{background:#FFF0F0;border-left:3px solid var(--red-l);color:var(--danger)}
+.pareto-legend{display:flex;gap:1rem;flex-wrap:wrap;font-size:.75rem;color:var(--muted);margin-bottom:1rem;align-items:center}
+/* Beneficio tab */
+.ben-crit-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1rem}
+.score-btn.ben-active{background:#7B2D8B;color:#fff;border-color:#7B2D8B}
+/* Scatter */
+.scatter-controls{display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:1rem;align-items:center}
+.scatter-legend-item{display:flex;align-items:center;gap:.35rem;font-size:.75rem;font-weight:600;color:var(--muted);padding:.3rem .7rem;border-radius:6px;background:var(--surface);border:0.5px solid var(--border)}
+/* Redistribución */
+.redist-kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.75rem;margin-bottom:1.5rem}
+.redist-kpi{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:.85rem 1rem}
+.redist-kpi-label{font-size:.72rem;color:var(--muted);margin-bottom:.2rem;font-weight:500}
+.redist-kpi-val{font-size:1.2rem;font-weight:700;color:var(--pri)}
+table.redist-tbl{width:100%;border-collapse:collapse;font-size:.77rem}
+table.redist-tbl th{background:#f0f4fa;color:var(--pri);font-weight:600;padding:.55rem .65rem;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+table.redist-tbl td{padding:.5rem .65rem;border-bottom:0.5px solid var(--border)}
+table.redist-tbl tr:hover td{background:#f8f9fc}
+.cambio-pos{color:var(--teal);font-weight:700}
+.cambio-neg{color:var(--danger);font-weight:700}
+.min-ok{color:var(--teal);font-weight:700}.min-fail{color:var(--danger);font-weight:700}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">
+    <span class="ti-svg"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+    SROI<span>Impact</span>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('home')">🏠 Inicio</button>
+    <button class="nav-tab" onclick="showPage('projects')">📊 Proyectos</button>
+    <button class="nav-tab" onclick="showPage('pareto')">📈 Análisis Escalabilidad</button>
+    <button class="nav-tab" onclick="showPage('beneficio')">💼 Análisis Beneficio</button>
+    <button class="nav-tab" onclick="showPage('cartesiano')">🎯 Plano Cartesiano</button>
+    <button class="nav-tab" onclick="showPage('redistribucion')">💰 Redistribución</button>
+    <button class="nav-tab" onclick="showPage('methodology')">📖 Metodología</button>
+  </div>
+</nav>
+
+<!-- ══ HOME ══ -->
+<div id="page-home" class="page active">
+  <div class="hero">
+    <div class="hero-badge">🛡 Metodología certificada SROI</div>
+    <div class="hero-title">Plataforma de Medición de <span>Impacto Social</span></div>
+    <div class="hero-sub">Calculamos el Retorno Social sobre la Inversión usando proxys financieros validados, árbol de decisión estándar y simulación Monte Carlo para cuantificar la incertidumbre.</div>
+  </div>
+  <div style="font-size:1.05rem;font-weight:700;color:var(--pri);margin-bottom:1.25rem">Comparativo SROI — todos los proyectos</div>
+  <div class="comparison-card">
+    <div class="comparison-header">
+      <div><div class="comparison-title">Retorno Social sobre la Inversión (P50) por proyecto</div><div class="comparison-sub">Barras de error: rango P10–P90 (intervalo de confianza 80% Monte Carlo)</div></div>
+      <div class="comp-sort-btns">
+        <button class="comp-sort-btn active" id="sort-sroi-btn" onclick="sortComparison('sroi')">Mayor SROI</button>
+        <button class="comp-sort-btn" id="sort-cat-btn" onclick="sortComparison('cat')">Por categoría</button>
+      </div>
+    </div>
+    <div class="comp-legend">
+      <div class="comp-legend-item"><div class="comp-legend-dot" style="background:var(--pri)"></div>Educación</div>
+      <div class="comp-legend-item"><div class="comp-legend-dot" style="background:var(--env)"></div>Medio Ambiente</div>
+      <div class="comp-legend-item"><div class="comp-legend-dot" style="background:var(--health)"></div>Salud</div>
+      <div class="comp-legend-item"><div class="comp-legend-dot" style="background:var(--emp)"></div>Emprendimiento</div>
+    </div>
+    <div style="position:relative;height:460px"><canvas id="chart-comparison"></canvas></div>
+  </div>
+  <div style="font-size:1.05rem;font-weight:700;color:var(--pri);margin-bottom:1.25rem">Pasos de la metodología</div>
+  <div class="steps-grid">
+    <div class="step-card"><div class="step-num">1</div><div class="step-title">Definir alcance y stakeholders</div><div class="step-desc">Identificar quiénes experimentan cambios como resultado de la actividad.</div></div>
+    <div class="step-card"><div class="step-num">2</div><div class="step-title">Mapear outcomes</div><div class="step-desc">Describir los cambios específicos: aprendizaje, ahorro energético, captura de CO₂.</div></div>
+    <div class="step-card"><div class="step-num">3</div><div class="step-title">Asignar proxy financiero</div><div class="step-desc">Usar el árbol de decisión para seleccionar el proxy más robusto y justificado.</div></div>
+    <div class="step-card"><div class="step-num">4</div><div class="step-title">Aplicar ajustes</div><div class="step-desc">Descontar deadweight, atribución y desplazamiento para estimar impacto neto.</div></div>
+    <div class="step-card"><div class="step-num">5</div><div class="step-title">Calcular SROI base</div><div class="step-desc">SROI = Valor social total / Inversión total. Se reporta con fuentes transparentes.</div></div>
+    <div class="step-card"><div class="step-num">6</div><div class="step-title">Sensibilidad Monte Carlo</div><div class="step-desc">10,000 iteraciones con distribuciones triangulares. Reportar P10, P50 y P90.</div></div>
+  </div>
+  <div style="font-size:1.05rem;font-weight:700;color:var(--pri);margin-bottom:1.25rem;margin-top:2rem">Categorías de impacto</div>
+  <div class="home-cat-grid">
+    <button class="home-cat-btn on" onclick="showPage('projects','all')">📋 Todos los proyectos <span class="hbadge">15</span></button>
+    <button class="home-cat-btn" onclick="showPage('projects','edu')">🎓 Educación <span class="hbadge" style="background:rgba(27,58,92,.15);color:#1B3A5C">4</span></button>
+    <button class="home-cat-btn on-env" onclick="showPage('projects','env')">🌿 Medio Ambiente <span class="hbadge">5</span></button>
+    <button class="home-cat-btn on-health" onclick="showPage('projects','health')">❤️ Salud <span class="hbadge">3</span></button>
+    <button class="home-cat-btn on-emp" onclick="showPage('projects','emp')">⚡ Emprendimiento <span class="hbadge">3</span></button>
+  </div>
+  <div class="sens-note"><strong>Análisis de sensibilidad — Monte Carlo:</strong> Cada supuesto incierto usa una distribución triangular con valor mínimo creíble, moda y máximo creíble. Se corren 10,000 iteraciones y se extraen los percentiles P10 (pesimista), P50 (base) y P90 (optimista). La incertidumbre deja de ser un problema para esconder y se convierte en información que presentar.</div>
+</div>
+
+<!-- ══ PROYECTOS ══ -->
+<div id="page-projects" class="page">
+  <div id="proj-list-view">
+    <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem;margin-top:.5rem">
+      <div style="font-size:1.05rem;font-weight:700;color:var(--pri)">Todos los proyectos</div>
+      <div style="background:#EDF2FA;color:var(--pri);font-size:.72rem;font-weight:600;padding:.2rem .6rem;border-radius:20px" id="proj-count-pill">15 proyectos</div>
+    </div>
+    <div class="cat-filter">
+      <button class="cat-pill active-all" onclick="filterProjects('all',this)">Todos <span class="bpill">15</span></button>
+      <button class="cat-pill" onclick="filterProjects('edu',this)">Educación <span class="bpill" style="background:rgba(27,58,92,.12);color:#1B3A5C">4</span></button>
+      <button class="cat-pill" onclick="filterProjects('env',this)">Medio Ambiente <span class="bpill" style="background:rgba(26,92,58,.12);color:var(--env)">5</span></button>
+      <button class="cat-pill" onclick="filterProjects('health',this)">Salud <span class="bpill" style="background:rgba(123,45,139,.12);color:var(--health)">3</span></button>
+      <button class="cat-pill" onclick="filterProjects('emp',this)">Emprendimiento <span class="bpill" style="background:rgba(139,69,19,.12);color:var(--emp)">3</span></button>
+    </div>
+    <div id="section-edu" class="cat-section">
+      <div class="cat-section-header"><div class="cat-section-title">Educación</div><div class="cat-section-pill edu">4 proyectos</div></div>
+      <div class="proj-grid" id="edu-grid"></div>
+    </div>
+    <div id="section-env" class="cat-section">
+      <div class="cat-section-header"><div class="cat-section-title env">Medio Ambiente</div><div class="cat-section-pill env">5 proyectos</div></div>
+      <div class="proj-grid" id="env-grid"></div>
+    </div>
+    <div id="section-health" class="cat-section">
+      <div class="cat-section-header"><div class="cat-section-title health">Salud</div><div class="cat-section-pill health">3 proyectos</div></div>
+      <div class="proj-grid" id="health-grid"></div>
+    </div>
+    <div id="section-emp" class="cat-section">
+      <div class="cat-section-header"><div class="cat-section-title emp">Emprendimiento</div><div class="cat-section-pill emp">3 proyectos</div></div>
+      <div class="proj-grid" id="emp-grid"></div>
+    </div>
+  </div>
+  <div id="proj-detail-view" style="display:none">
+    <button class="back-btn" onclick="backToList()">← Volver a Proyectos</button>
+    <div id="proj-detail-content"></div>
+  </div>
+</div>
+
+<!-- ══ ANÁLISIS ESCALABILIDAD (ex Pareto) ══ -->
+<div id="page-pareto" class="page">
+  <div style="font-size:1.05rem;font-weight:700;color:var(--pri);margin-bottom:1.25rem">Análisis Escalabilidad — Portafolio Xignux (15 proyectos)</div>
+  <div class="pareto-tabs">
+    <button class="pareto-tab active" onclick="showParetoTab('result',this)">Resultado Pareto</button>
+    <button class="pareto-tab" onclick="showParetoTab('criteria',this)">Editor de criterios</button>
+    <button class="pareto-tab" onclick="showParetoTab('assessment',this)">✅ Evaluación</button>
+  </div>
+
+  <div id="ptab-result" class="pareto-panel active">
+    <div class="kpi-row" id="kpi-row"></div>
+    <div class="note-blue" id="note-pareto"></div>
+    <div class="pareto-legend">
+      <span><span class="dot front"></span>Frontera Pareto — mantener / escalar</span>
+      <span><span class="dot mid"></span>Zona media — juicio estratégico</span>
+      <span><span class="dot dom"></span>Dominado — reducir / replantear / pausar</span>
+    </div>
+    <div class="tbl-wrap">
+      <table class="pareto-tbl">
+        <thead><tr>
+          <th>Proyecto</th><th>Cat.</th>
+          <th class="sortable" onclick="sortParetoTable('sroi')">SROI P50 ↕</th>
+          <th>Urgencia</th><th>Cal.Evidencia</th>
+          <th>Complejidad</th><th>Riesgo</th><th>Pot.Medición</th>
+          <th>Score</th><th>Dominado por</th><th>Resultado</th>
+        </tr></thead>
+        <tbody id="pareto-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="ptab-criteria" class="pareto-panel">
+    <div class="note-blue"><strong>Editor de criterios cualitativos</strong> (escala 1–5). SROI P50 es <strong>fijo</strong> — viene de los datos calculados. Complejidad y Riesgo son escala invertida (1=muy favorable). El análisis se recalcula en tiempo real.</div>
+    <div class="crit-grid-par" id="crit-grid"></div>
+  </div>
+
+  <div id="ptab-assessment" class="pareto-panel">
+    <div class="assess-hero">
+      <h2>Evaluación objetiva de criterios</h2>
+      <p>Responde las 4 preguntas de cada criterio para un proyecto. El sistema calcula automáticamente la calificación (1–5) y la aplica al análisis Pareto.</p>
+    </div>
+    <div class="assess-toolbar">
+      <label for="assess-proj-sel">Proyecto:</label>
+      <select id="assess-proj-sel" onchange="onAssessProjChange()"></select>
+      <button class="apply-btn" id="assess-apply-btn" onclick="applyAssessment()" disabled>Aplicar al Pareto</button>
+      <button class="reset-btn" onclick="resetAssessment()">Reiniciar</button>
+    </div>
+    <div class="progress-wrap">
+      <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:.8rem;font-weight:600;color:var(--pri)">Progreso</span><span id="assess-prog-text" style="font-size:.78rem;color:var(--muted)">0 de 5 criterios completados</span></div>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="assess-prog-bar" style="width:0%"></div></div>
+    </div>
+    <div class="assess-summary" id="assess-summary" style="display:none">
+      <div class="assess-sum-title">Calificaciones — <span id="assess-proj-name-sum"></span></div>
+      <div class="assess-grid" id="assess-sum-grid"></div>
+    </div>
+    <div id="assess-criteria-container"></div>
+  </div>
+</div>
+
+<!-- ══ ANÁLISIS BENEFICIO (NEW) ══ -->
+<div id="page-beneficio" class="page">
+  <div style="font-size:1.05rem;font-weight:700;color:var(--pri);margin-bottom:.5rem">Análisis Beneficio a Xignux — 15 proyectos</div>
+  <div class="note-blue" style="margin-bottom:1.25rem"><strong>Metodología de Beneficio a Xignux (5 dimensiones · 14 preguntas):</strong> Se evalúa cada proyecto en Reputación/Marca Empleadora (3 Qs), Retención y Compromiso del Empleado (3 Qs), Atracción y Desarrollo de Talento (3 Qs), Innovación y Aprendizaje Organizacional (2 Qs) y Relaciones y Ecosistema Estratégico (3 Qs). Escala 1–5. Los scores reflejan la evaluación completa del equipo Xignux (14 preguntas por proyecto).</div>
+  <div class="pareto-tabs">
+    <button class="pareto-tab active" onclick="showBenTab('result',this)">Resultado Pareto Beneficio</button>
+    <button class="pareto-tab" onclick="showBenTab('criteria',this)">Editor de criterios</button>
+    <button class="pareto-tab" onclick="showBenTab('assessment',this)">✅ Evaluación</button>
+  </div>
+
+  <div id="btab-result" class="pareto-panel active">
+    <div class="tbl-wrap">
+      <table class="pareto-tbl">
+        <thead><tr>
+          <th>Proyecto</th><th>Cat.</th>
+          <th>Reputación</th><th>Retención</th><th>Talento</th><th>Innovación</th><th>Relaciones</th>
+          <th class="sortable" onclick="sortBenTable('score')">Score ↕</th>
+        </tr></thead>
+        <tbody id="ben-pareto-body"></tbody>
+      </table>
+    </div>
+    <div class="chart-card" style="margin-top:1.25rem">
+      <div class="chart-label">Comparativo de beneficio a Xignux por proyecto</div>
+      <div class="chart-title">Score promedio (1–5) · ordenado de mayor a menor</div>
+      <div style="position:relative;height:420px"><canvas id="chart-beneficio-bar"></canvas></div>
+    </div>
+  </div>
+
+  <div id="btab-criteria" class="pareto-panel">
+    <div class="note-blue"><strong>Editor de criterios de Beneficio</strong> (escala 1–5: 1=Muy bajo · 5=Muy alto). Modifica los scores por proyecto para ajustar el análisis en tiempo real.</div>
+    <div class="crit-grid-par" id="ben-crit-grid"></div>
+  </div>
+
+  <div id="btab-assessment" class="pareto-panel">
+    <div class="assess-hero">
+      <h2>Evaluación de Beneficio a Xignux</h2>
+      <p>Responde las preguntas de cada dimensión para un proyecto. El sistema calcula automáticamente el score (1–5) de cada dimensión y lo aplica al análisis Pareto de Beneficio.</p>
+    </div>
+    <div class="assess-toolbar">
+      <label for="ben-assess-proj-sel">Proyecto:</label>
+      <select id="ben-assess-proj-sel" onchange="onBenAssessProjChange()"></select>
+      <button class="apply-btn" id="ben-assess-apply-btn" onclick="applyBenAssessment()" disabled>Aplicar al Análisis Beneficio</button>
+      <button class="reset-btn" onclick="resetBenAssessment()">Reiniciar</button>
+    </div>
+    <div class="progress-wrap">
+      <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:.8rem;font-weight:600;color:var(--pri)">Progreso</span><span id="ben-assess-prog-text" style="font-size:.78rem;color:var(--muted)">0 de 5 dimensiones completadas</span></div>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="ben-assess-prog-bar" style="width:0%"></div></div>
+    </div>
+    <div class="assess-summary" id="ben-assess-summary" style="display:none">
+      <div class="assess-sum-title">Resultados — <span id="ben-assess-proj-name-sum"></span></div>
+      <div class="assess-grid" id="ben-assess-sum-grid"></div>
+    </div>
+    <div id="ben-assess-criteria-container"></div>
+  </div>
+</div>
+
+<!-- ══ PLANO CARTESIANO (NEW) ══ -->
+<div id="page-cartesiano" class="page">
+  <div style="font-size:1.05rem;font-weight:700;color:var(--pri);margin-bottom:.5rem">Plano Cartesiano — Beneficio vs Escalabilidad</div>
+  <div class="note-blue" style="margin-bottom:1.25rem">Cada punto representa un proyecto. <strong>Eje X:</strong> Beneficio normalizado (score de beneficio a Xignux / máximo). <strong>Eje Y:</strong> Escalabilidad normalizada (score de escalabilidad Pareto / máximo). Los valores vienen del cálculo vectorial del Excel. El tamaño del punto es proporcional al presupuesto actual.</div>
+  <div class="chart-card">
+    <div class="scatter-controls">
+      <div class="scatter-legend-item"><div class="comp-legend-dot" style="background:var(--pri)"></div>Educación</div>
+      <div class="scatter-legend-item"><div class="comp-legend-dot" style="background:var(--env)"></div>Medio Ambiente</div>
+      <div class="scatter-legend-item"><div class="comp-legend-dot" style="background:var(--health)"></div>Salud</div>
+      <div class="scatter-legend-item"><div class="comp-legend-dot" style="background:var(--emp)"></div>Emprendimiento</div>
+    </div>
+    <div style="position:relative;height:520px"><canvas id="chart-scatter"></canvas></div>
+  </div>
+  <div class="chart-card">
+    <div class="chart-label">Cuadrantes estratégicos</div>
+    <div class="chart-title">Interpretación del plano</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.5rem">
+      <div style="background:#E1F5EE;border-radius:var(--radius);padding:1rem;border-left:3px solid var(--teal)">
+        <div style="font-weight:700;font-size:.88rem;color:var(--teal);margin-bottom:.35rem">↗ Cuadrante I — Estrella (Alto Beneficio, Alta Escalabilidad)</div>
+        <div style="font-size:.8rem;color:#1a3a2a;line-height:1.5">Proyectos que generan alto valor para Xignux Y tienen alto potencial de escalar. Prioridad máxima de inversión.</div>
+      </div>
+      <div style="background:#EDF2FA;border-radius:var(--radius);padding:1rem;border-left:3px solid var(--pri)">
+        <div style="font-weight:700;font-size:.88rem;color:var(--pri);margin-bottom:.35rem">↙ Cuadrante II — Escalar con Cuidado (Alto Beneficio, Baja Escalabilidad)</div>
+        <div style="font-size:.8rem;color:#1a2a3a;line-height:1.5">Generan valor para Xignux pero son difíciles de escalar. Mantener e iterar modelo.</div>
+      </div>
+      <div style="background:#FAEEDA;border-radius:var(--radius);padding:1rem;border-left:3px solid var(--amb-l)">
+        <div style="font-weight:700;font-size:.88rem;color:var(--amb);margin-bottom:.35rem">↗ Cuadrante III — Potencial Latente (Bajo Beneficio, Alta Escalabilidad)</div>
+        <div style="font-size:.8rem;color:#3a2a0a;line-height:1.5">Escalables pero bajo retorno directo a Xignux. Evaluar si el impacto social compensa.</div>
+      </div>
+      <div style="background:#FCEBEB;border-radius:var(--radius);padding:1rem;border-left:3px solid var(--red-l)">
+        <div style="font-weight:700;font-size:.88rem;color:var(--danger);margin-bottom:.35rem">↙ Cuadrante IV — Revisar (Bajo Beneficio, Baja Escalabilidad)</div>
+        <div style="font-size:.8rem;color:#3a1a1a;line-height:1.5">Poca creación de valor para Xignux y difíciles de escalar. Replanteamiento estratégico.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ REDISTRIBUCIÓN (NEW) ══ -->
+<div id="page-redistribucion" class="page">
+  <div style="font-size:1.05rem;font-weight:700;color:var(--pri);margin-bottom:.5rem">Redistribución de Presupuesto — Metodología Vectorial</div>
+  <div class="note-blue" style="margin-bottom:1.25rem"><strong>Metodología:</strong> El presupuesto óptimo se asigna en función de la <em>magnitud ajustada</em> de cada proyecto (vector Beneficio–Escalabilidad). Se aplica un factor que penaliza la lejanía con el ángulo de 45° (equilibrio ideal entre beneficio y escalabilidad). El mínimo operativo es el <strong>60% del presupuesto actual</strong>. El excedente (total − suma de mínimos) se redistribuye proporcionalmente a la magnitud ajustada.</div>
+  <div class="redist-kpi-row" id="redist-kpi-row"></div>
+  <div class="chart-card">
+    <div class="chart-label">Presupuesto actual vs propuesto por proyecto</div>
+    <div class="chart-title">Comparativo de asignación (MXN)</div>
+    <div style="position:relative;height:400px"><canvas id="chart-redist-bar"></canvas></div>
+  </div>
+  <div class="tbl-wrap">
+    <table class="redist-tbl">
+      <thead><tr>
+        <th>Proyecto</th><th>Cat.</th>
+        <th>B. Norm</th><th>E. Norm</th><th>Magnitud</th><th>Ángulo°</th><th>Factor</th><th>Mag. Aj.</th>
+        <th>Actual (MXN)</th><th>Mínimo (MXN)</th><th>Propuesto (MXN)</th><th>Cambio</th><th>Mín. OK</th>
+      </tr></thead>
+      <tbody id="redist-body"></tbody>
+    </table>
+  </div>
+  <div class="sens-note" style="margin-top:1rem"><strong>Nota metodológica:</strong> El presupuesto "propuesto" es el monto óptimo puro según la magnitud ajustada. El presupuesto "nuevo" redistribuye la diferencia real entre cedentes y receptores ponderando por su presupuesto actual. La suma del portafolio se conserva exacta.</div>
+</div>
+
+<!-- ══ METODOLOGÍA ══ -->
+<div id="page-methodology" class="page">
+  <div style="font-size:1.05rem;font-weight:700;color:var(--pri);margin-bottom:1.25rem">Metodología SROI detallada</div>
+  <div class="chart-card">
+    <div class="chart-title">Fórmula central SROI</div>
+    <div style="background:#EDF2FA;border-radius:var(--radius);padding:1.25rem;font-size:1.1rem;font-weight:700;color:var(--pri);text-align:center;letter-spacing:.5px;margin-bottom:.75rem">SROI = Valor Social Total ($) ÷ Inversión Total ($)</div>
+    <div style="font-size:.83rem;color:var(--muted);line-height:1.6">El Valor Social Total se calcula como la suma de los outcomes de cada stakeholder multiplicados por su proxy financiero, ajustados por deadweight, atribución y desplazamiento.</div>
+  </div>
+  <div class="sens-note"><strong>Monte Carlo — distribución triangular:</strong> Para cada parámetro incierto se define un mínimo creíble, una moda y un máximo creíble. En 10,000 iteraciones el modelo sortea aleatoriamente un valor de cada distribución y calcula el SROI. El resultado es una distribución de la que se extraen P10, P50 y P90.</div>
+  <div class="chart-card">
+    <div class="chart-title">Fuentes de proxy aceptadas (jerarquía)</div>
+    <div style="display:flex;flex-direction:column;gap:.5rem">
+      <div style="display:flex;align-items:center;gap:.75rem;padding:.5rem;background:#f8f7f4;border-radius:6px"><span style="background:var(--pri);color:#fff;width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0">1</span><span style="font-size:.85rem">Precio de mercado directo (tarifa CFE, precio CO₂, precio de congreso)</span></div>
+      <div style="display:flex;align-items:center;gap:.75rem;padding:.5rem;background:#f8f7f4;border-radius:6px"><span style="background:var(--pri-light);color:#fff;width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0">2</span><span style="font-size:.85rem">Capital humano: incremento salarial por efecto del programa</span></div>
+      <div style="display:flex;align-items:center;gap:.75rem;padding:.5rem;background:#f8f7f4;border-radius:6px"><span style="background:var(--teal);color:#fff;width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0">3</span><span style="font-size:.85rem">Costo de programa público equivalente (costo evitado)</span></div>
+      <div style="display:flex;align-items:center;gap:.75rem;padding:.5rem;background:#f8f7f4;border-radius:6px"><span style="background:#854F0B;color:#fff;width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0">4</span><span style="font-size:.85rem">Wellbeing / Servicios ecosistémicos / QALY (salud y bienestar subjetivo)</span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+// SVG ICONS
+// ══════════════════════════════════════════════════════════════
+const SVG={
+'building-community':`<svg viewBox="0 0 24 24" width="17" height="17" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="9" height="14"/><rect x="13" y="3" width="9" height="18"/></svg>`,
+'award':`<svg viewBox="0 0 24 24" width="17" height="17" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>`,
+'flask':`<svg viewBox="0 0 24 24" width="17" height="17" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6v7l4 9H5L9 10V3z"/></svg>`,
+'network':`<svg viewBox="0 0 24 24" width="17" height="17" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><line x1="12" y1="7" x2="12" y2="13"/><line x1="12" y1="13" x2="5" y2="17"/><line x1="12" y1="13" x2="19" y2="17"/></svg>`,
+'solar':`<svg viewBox="0 0 24 24" width="17" height="17" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="4.22" y1="4.22" x2="6.34" y2="6.34"/><line x1="17.66" y1="17.66" x2="19.78" y2="19.78"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></svg>`,
+'tree':`<svg viewBox="0 0 24 24" width="17" height="17" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8C8 10 5.9 16.17 3.82 19.5c1.33-1 2.67-2 4.18-2.5C5 21 6 22 8 22c4 0 6-3 8-7s2-9-1-13c-1 1-2 2-2 4z"/></svg>`,
+'park':`<svg viewBox="0 0 24 24" width="17" height="17" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l4-8 4 4 3-6 5 10H3z"/><line x1="12" y1="21" x2="12" y2="17"/></svg>`,
+'heart':`<svg viewBox="0 0 24 24" width="17" height="17" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`,
+'gamepad':`<svg viewBox="0 0 24 24" width="17" height="17" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/><line x1="15" y1="13" x2="15.01" y2="13"/><line x1="18" y1="11" x2="18.01" y2="11"/><rect x="2" y="8" width="20" height="8" rx="4"/></svg>`,
+'package':`<svg viewBox="0 0 24 24" width="17" height="17" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>`,
+'bolt':`<svg viewBox="0 0 24 24" width="17" height="17" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>`,
+'trophy':`<svg viewBox="0 0 24 24" width="17" height="17" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg>`,
+'sun-energy':`<svg viewBox="0 0 24 24" width="17" height="17" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>`,
+};
+const ic=(n,s='')=>`<span class="ti-svg" style="${s}">${SVG[n]||''}</span>`;
+
+// ══════════════════════════════════════════════════════════════
+// PROJECT DATA (unchanged from original)
+// ══════════════════════════════════════════════════════════════
+const EDU=[
+{id:'e0',cat:'edu',name:'Cátedra Jorge L. Garza',org:'UDEM',budget:215000,net_p50:1625133,icon:'building-community',
+ cardStats:[{v:'2,800',l:'Estudiantes'},{v:'3',l:'Proyectos fin.'},{v:'2',l:'Stakeholders'}],
+ scenarios:{p10:6.6735,p50:7.5588,p90:8.1184},
+ histogram:{labels:["5.9664","6.0457","6.1249","6.2041","6.2834","6.3626","6.4418","6.5211","6.6003","6.6795","6.7588","6.8380","6.9172","6.9965","7.0757","7.1549","7.2342","7.3134","7.3926","7.4719","7.5511","7.6303","7.7096","7.7888","7.8680","7.9473","8.0265","8.1057","8.1850","8.2642"],data:[17,23,60,86,100,133,177,197,222,223,255,294,301,331,359,370,397,444,461,498,501,520,550,570,588,605,605,633,391,89],colors:["#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#3B6D11","#3B6D11"]},
+ sensitivity:[{label:'Proxy estudiantes — precio evento',corr:0.9987},{label:'Proxy capital semilla — aceleradora',corr:0.0268},{label:'% incremento salarial fundadores',corr:0.0054}],
+ outcomes:[{label:'2,800 Estudiantes — precio evento',path:'Precio de mercado',pathColor:'teal',desc:'Experiencia en evento de emprendimiento',sources:[{name:'Congreso Empréndete',val:'$1,749'},{name:'Talent Land',val:'$2,450'},{name:'INC MTY',val:'$2,500'}],proxy_min:1749,proxy_mode:2450,proxy_max:2500,adjustments:{dw:0.4,attr:0.5,disp:0.0,drop:0.0},caus:null,gross_p50:6322981,net_p50:1517515},{label:'3 Proyectos — capital semilla',path:'Precio de mercado',pathColor:'teal',desc:'Acceso a capital semilla vía aceleradora',sources:[{name:'Advanced Board',val:'$120,000'},{name:'EGADE Search Fund',val:'$126,612'},{name:'Parque TecnIA',val:'$150,000'}],proxy_min:120000,proxy_mode:126612,proxy_max:150000,adjustments:{dw:0.4,attr:0.5,disp:0.0,drop:0.0},caus:null,gross_p50:394142,net_p50:94594},{label:'3 Fundadores — capital humano',path:'Capital humano',pathColor:'amber',desc:'Incremento en ingreso laboral anual',sources:[{name:'Sueldo base fundador',val:'$15,400 MXN/mes'},{name:'Efecto salarial 5–15%',val:'MIT startup wage premium'}],sueldo_base:15400,pct_min:0.05,pct_mode:0.1,pct_max:0.15,adjustments:{dw:0.4,attr:0.5,disp:0.0,drop:0.2},caus:null,gross_p50:55497,net_p50:13319}]},
+{id:'e1',cat:'edu',name:'Premio Rómulo Garza',org:'Tec de Monterrey',budget:1050000,net_p50:403929,icon:'award',
+ cardStats:[{v:'74',l:'Postulaciones'},{v:'11',l:'Ganadores'},{v:'2',l:'Stakeholders'}],
+ scenarios:{p10:0.2966,p50:0.3847,p90:0.4767},
+ histogram:{labels:["0.1950","0.2076","0.2202","0.2329","0.2455","0.2581","0.2707","0.2833","0.2959","0.3086","0.3212","0.3338","0.3464","0.3590","0.3716","0.3842","0.3969","0.4095","0.4221","0.4347","0.4473","0.4599","0.4725","0.4852","0.4978","0.5104","0.5230","0.5356","0.5482","0.5609"],data:[2,6,23,62,113,169,228,379,369,470,506,557,671,707,715,701,689,646,557,478,409,409,363,257,205,129,96,55,24,5],colors:["#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11"]},
+ sensitivity:[{label:'Proxy investigadores — precio congreso',corr:0.9581},{label:'% incremento salarial ganadores',corr:0.2461}],
+ outcomes:[{label:'74 Investigadores — precio congreso',path:'Precio de mercado',pathColor:'teal',desc:'Networking y visibilidad en congreso',sources:[{name:'Conferencia IFE',val:'$8,500'},{name:'Congreso IEE',val:'$17,000'},{name:'MICAI',val:'$27,000'}],proxy_min:8500,proxy_mode:17000,proxy_max:27000,adjustments:{dw:0.4,attr:0.2,disp:0.0,drop:0.0},caus:null,gross_p50:1286312,net_p50:308715},{label:'11 Ganadores — capital humano',path:'Capital humano',pathColor:'amber',desc:'Incremento en ingreso laboral anual',sources:[{name:'Sueldo base investigador',val:'$30,000 MXN/mes'},{name:'Efecto salarial 5–15%',val:'Paper referencia'}],sueldo_base:30000,pct_min:0.05,pct_mode:0.1,pct_max:0.15,adjustments:{dw:0.4,attr:0.4,disp:0.0,drop:0.2},caus:null,gross_p50:394752,net_p50:94740}]},
+{id:'e2',cat:'edu',name:'Academia de Exploradores Xignux',org:'Xignux',budget:400000,net_p50:76828,icon:'flask',
+ cardStats:[{v:'40+',l:'Niños'},{v:'40',l:'Padres'},{v:'2',l:'Stakeholders'}],
+ scenarios:{p10:0.1492,p50:0.1921,p90:0.2338},
+ histogram:{labels:["0.1128","0.1179","0.1231","0.1283","0.1335","0.1387","0.1439","0.1490","0.1542","0.1594","0.1646","0.1698","0.1749","0.1801","0.1853","0.1905","0.1957","0.2008","0.2060","0.2112","0.2164","0.2216","0.2267","0.2319","0.2371","0.2423","0.2475","0.2526","0.2578","0.2630"],data:[15,49,82,127,193,243,278,338,376,393,426,469,546,613,654,643,653,552,538,491,440,406,361,311,247,204,136,114,71,31],colors:["#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11"]},
+ sensitivity:[{label:'Proxy padres — childcare por hora',corr:0.9931},{label:'Proxy niños — precio campamento',corr:0.0699}],
+ outcomes:[{label:'40 Niños — precio campamento ciencia',path:'Precio de mercado',pathColor:'teal',desc:'Experiencia en campamento de ciencia y aventura',sources:[{name:'Campamento UDEM',val:'$2,300'},{name:'Campamento UANL',val:'$3,000'},{name:'Campamento STEM',val:'$3,500'}],proxy_min:2300,proxy_mode:3000,proxy_max:3500,adjustments:{dw:0.35,attr:0.25,disp:0.0,drop:0.2},caus:null,gross_p50:118080,net_p50:15350},{label:'40 Padres — horas de cuidado liberadas',path:'Precio de mercado',pathColor:'teal',desc:'Valor del tiempo liberado a padres',sources:[{name:'Guardería/childcare mercado MX',val:'$50–$150 MXN/hr'},{name:'Horas liberadas',val:'24 hrs'},{name:'Familias',val:'40 padres'}],proxy_min:50,proxy_mode:100,proxy_max:150,adjustments:{dw:0.2,attr:0.8,disp:0.0,drop:0.0},caus:null,gross_p50:96202,net_p50:61570}]},
+{id:'e3',cat:'edu',name:'Red Sumarse Nuevo León',org:'Red Sumarse / Xignux',budget:500000,net_p50:1917624,icon:'network',
+ cardStats:[{v:'3,000',l:'Niños'},{v:'12',l:'Escuelas'},{v:'4',l:'Outcomes'}],
+ scenarios:{p10:3.4802,p50:3.8352,p90:4.1876},
+ histogram:{labels:["3.0100","3.0764","3.1427","3.2091","3.2754","3.3418","3.4081","3.4745","3.5409","3.6072","3.6736","3.7399","3.8063","3.8726","3.9390","4.0053","4.0717","4.1380","4.2044","4.2707","4.3371","4.4034","4.4698","4.5361","4.6025","4.6688","4.7352","4.8015","4.8679","4.9342"],data:[10,14,30,48,92,150,218,305,415,540,650,700,790,875,885,845,785,720,565,450,385,268,182,115,68,35,22,18,8,4],colors:["#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11"]},
+ sensitivity:[{label:'Alianza empresarial — capital social multisectorial',corr:0.8621},{label:'Comunidad escolar — bienestar y cohesión social',corr:0.7243},{label:'Niños — acceso a programas educativos (CONEVAL)',corr:0.6874},{label:'Escuelas — fortalecimiento institucional',corr:0.4512}],
+ outcomes:[{label:'3,000 niños — acceso a programas educativos',path:'Costo evitado',pathColor:'amber',desc:'Valor anual equivalente de apoyos educativos',sources:[{name:'Proxy mín.',val:'$875 MXN'},{name:'Proxy moda',val:'$1,250 MXN'},{name:'Proxy máx.',val:'$1,625 MXN'}],proxy_min:875,proxy_mode:1250,proxy_max:1625,adjustments:{dw:0.25,attr:0.35,disp:0.00,drop:0.10},caus:0.65,gross_p50:3750000,net_p50:1069875},{label:'12 escuelas — fortalecimiento institucional',path:'Costo evitado',pathColor:'amber',desc:'Benchmark de fortalecimiento escolar',sources:[{name:'Proxy mín.',val:'$13,500 MXN'},{name:'Proxy moda',val:'$18,000 MXN'},{name:'Proxy máx.',val:'$22,500 MXN'}],proxy_min:13500,proxy_mode:18000,proxy_max:22500,adjustments:{dw:0.15,attr:0.40,disp:0.00,drop:0.08},caus:0.60,gross_p50:216000,net_p50:60804},{label:'5,000 comunidad escolar — bienestar',path:'Wellbeing / QALY',pathColor:'health',desc:'Valor social de participación comunitaria',sources:[{name:'Proxy mín.',val:'$273 MXN'},{name:'Proxy moda',val:'$420 MXN'},{name:'Proxy máx.',val:'$567 MXN'}],proxy_min:273,proxy_mode:420,proxy_max:567,adjustments:{dw:0.30,attr:0.40,disp:0.05,drop:0.15},caus:0.65,gross_p50:2100000,net_p50:462945},{label:'12 alianzas empresariales — capital social',path:'Precio de mercado',pathColor:'teal',desc:'Valor estimado de colaboración interinstitucional',sources:[{name:'Proxy mín.',val:'$45,000 MXN'},{name:'Proxy moda',val:'$75,000 MXN'},{name:'Proxy máx.',val:'$105,000 MXN'}],proxy_min:45000,proxy_mode:75000,proxy_max:105000,adjustments:{dw:0.20,attr:0.50,disp:0.00,drop:0.10},caus:null,gross_p50:900000,net_p50:324000}]}
+];
+const ENV=[
+{id:'v0',cat:'env',name:'Energía para Todos',org:'XIGNUX / CFE',budget:500000,net_p50:1051365,icon:'solar',
+ cardStats:[{v:'484k',l:'kWh generados'},{v:'418',l:'Hogares'},{v:'73t',l:'CO₂ evitado'}],
+ scenarios:{p10:1.9553,p50:2.1031,p90:2.2489},
+ histogram:{labels:["1.7833","1.8052","1.8271","1.8490","1.8708","1.8927","1.9146","1.9365","1.9584","1.9803","2.0021","2.0240","2.0459","2.0678","2.0897","2.1116","2.1335","2.1553","2.1772","2.1991","2.2210","2.2429","2.2648","2.2866","2.3085","2.3304","2.3523","2.3742","2.3961","2.4179"],data:[8,13,26,55,93,153,223,304,362,452,501,592,660,695,772,755,734,653,632,539,479,365,305,232,171,112,51,36,17,10],colors:["#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11"]},
+ sensitivity:[{label:'Reducción gasto energético — bienestar hogar',corr:0.865},{label:'kWh generados — ahorro tarifa CFE',corr:0.4855},{label:'CO₂ evitado — beneficio climático',corr:0.0642}],
+ outcomes:[{label:'484,044 kWh — ahorro tarifa CFE',path:'Precio de mercado',pathColor:'teal',desc:'Tarifa DAC residencial CFE vigente',sources:[{name:'Tarifa CFE DAC',val:'$1.16 MXN/kWh'}],proxy_min:0.986,proxy_mode:1.16,proxy_max:1.334,adjustments:{dw:0.10,disp:0.0,attr:0.0,drop:0.02},caus:0.90,gross_p50:550070,net_p50:445557},{label:'73 ton CO₂ evitado',path:'Precio de mercado',pathColor:'teal',desc:'Precio social del carbono',sources:[{name:'Precio CO₂ voluntario',val:'$250 MXN/ton'}],proxy_min:187.5,proxy_mode:250,proxy_max:312.5,adjustments:{dw:0.10,disp:0.0,attr:0.0,drop:0.02},caus:0.90,gross_p50:17885,net_p50:14487},{label:'418 hogares — reducción gasto energético',path:'Bienestar hogar',pathColor:'teal',desc:'Ahorro anual estimado en factura eléctrica',sources:[{name:'Ahorro promedio hogar rural',val:'$1,781.76 MXN/año'}],proxy_min:1425.4,proxy_mode:1781.76,proxy_max:2138.1,adjustments:{dw:0.10,disp:0.0,attr:0.0,drop:0.02},caus:0.90,gross_p50:730026,net_p50:591321}]},
+{id:'v1',cat:'env',name:'Reforestación Mariposa Monarca',org:'XIGNUX / CONANP',budget:350000,net_p50:38567,icon:'tree',
+ cardStats:[{v:'158t',l:'CO₂ capturado'},{v:'25.2k',l:'m³ agua'},{v:'7,200',l:'m² ecosist.'}],
+ scenarios:{p10:0.0976,p50:0.1106,p90:0.1234},
+ histogram:{labels:["0.0850","0.0868","0.0885","0.0903","0.0920","0.0938","0.0955","0.0973","0.0990","0.1008","0.1026","0.1043","0.1061","0.1078","0.1096","0.1113","0.1131","0.1148","0.1166","0.1183","0.1201","0.1218","0.1236","0.1253","0.1271","0.1288","0.1306","0.1324","0.1341","0.1359"],data:[3,19,32,101,154,192,271,331,379,448,509,583,585,648,672,722,675,630,587,505,441,375,336,270,207,176,92,38,15,4],colors:["#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11"]},
+ sensitivity:[{label:'Agua infiltrada — recarga acuífero',corr:0.9788},{label:'CO₂ capturado — mitigación climática',corr:0.1769},{label:'Servicios ecosistémicos — biodiversidad',corr:0.0746}],
+ outcomes:[{label:'158 ton CO₂ capturado',path:'Precio de mercado',pathColor:'teal',desc:'Precio social del carbono',sources:[{name:'Precio CO₂ voluntario',val:'$250 MXN/ton'}],proxy_min:175,proxy_mode:250,proxy_max:325,adjustments:{dw:0.25,disp:0.05,attr:0.50,drop:0.0},caus:0.3562,gross_p50:39425,net_p50:5003},{label:'25,200 m³ agua infiltrada',path:'Precio de mercado',pathColor:'teal',desc:'Costo de recarga artificial de acuífero',sources:[{name:'Costo recarga CONAGUA',val:'$10 MXN/m³'}],proxy_min:7.5,proxy_mode:10,proxy_max:12.5,adjustments:{dw:0.25,disp:0.05,attr:0.50,drop:0.0},caus:0.3562,gross_p50:251543,net_p50:31920},{label:'7,200 m² servicios ecosistémicos',path:'Servicios ecosist.',pathColor:'env',desc:'Valor ecosistémico por m²',sources:[{name:'TEEB México — bosque monarca',val:'$1.80 MXN/m²'}],proxy_min:1.17,proxy_mode:1.80,proxy_max:2.43,adjustments:{dw:0.25,disp:0.05,attr:0.50,drop:0.0},caus:0.3562,gross_p50:12959,net_p50:1644}]},
+{id:'v2',cat:'env',name:'Alianza Parque Chipinque',org:'XIGNUX / Parque Chipinque',budget:120000,net_p50:1522,icon:'park',
+ cardStats:[{v:'205',l:'Árboles'},{v:'4.7t',l:'CO₂/año'},{v:'2',l:'Outcomes'}],
+ scenarios:{p10:0.0114,p50:0.0127,p90:0.0140},
+ histogram:{labels:["0.0094","0.0096","0.0098","0.0100","0.0101","0.0103","0.0105","0.0106","0.0108","0.0110","0.0112","0.0113","0.0115","0.0117","0.0119","0.0120","0.0122","0.0124","0.0126","0.0127","0.0129","0.0131","0.0133","0.0134","0.0136","0.0138","0.0140","0.0141","0.0143","0.0145"],data:[9,29,42,78,125,166,261,324,402,460,601,613,686,748,706,717,686,697,575,498,429,392,246,222,127,77,44,25,11,4],colors:["#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11"]},
+ sensitivity:[{label:'Regulación climática urbana (cooling)',corr:0.9091},{label:'CO₂ capturado — pinos nativos',corr:0.3737}],
+ outcomes:[{label:'205 árboles — regulación climática urbana',path:'Servicios ecosist.',pathColor:'env',desc:'Valor de cooling urbano por árbol maduro',sources:[{name:'Valor cooling árbol urbano NL',val:'$8.50 MXN/árbol'}],proxy_min:5.95,proxy_mode:8.50,proxy_max:11.05,adjustments:{dw:0.15,disp:0.0,attr:0.15,drop:0.0},caus:0.7225,gross_p50:1742.5,net_p50:908},{label:'4.7 ton CO₂ — pinos nativos',path:'Precio de mercado',pathColor:'teal',desc:'Precio social del carbono',sources:[{name:'Precio CO₂ voluntario',val:'$250 MXN/ton'}],proxy_min:200,proxy_mode:250,proxy_max:300,adjustments:{dw:0.15,disp:0.0,attr:0.15,drop:0.0},caus:0.7225,gross_p50:1175,net_p50:614}]},
+{id:'v3',cat:'env',name:'Reforestación Tepotzotlán',org:'XIGNUX / CONAFOR',budget:280000,net_p50:13566,icon:'tree',
+ cardStats:[{v:'1,850',l:'Árboles'},{v:'41.2t',l:'CO₂/año'},{v:'2',l:'Outcomes'}],
+ scenarios:{p10:0.0434,p50:0.0485,p90:0.0536},
+ histogram:{labels:["0.0370","0.0378","0.0386","0.0394","0.0402","0.0410","0.0418","0.0426","0.0434","0.0442","0.0450","0.0458","0.0466","0.0474","0.0482","0.0490","0.0498","0.0506","0.0514","0.0522","0.0530","0.0538","0.0546","0.0554","0.0562","0.0570","0.0578","0.0586","0.0594","0.0602"],data:[5,15,29,66,89,159,200,285,366,446,494,601,640,707,745,717,724,641,601,525,467,422,342,253,160,144,74,46,23,14],colors:["#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11"]},
+ sensitivity:[{label:'Regulación climática urbana (cooling)',corr:0.91},{label:'CO₂ capturado — pinos nativos',corr:0.4078}],
+ outcomes:[{label:'1,850 árboles — regulación climática urbana',path:'Servicios ecosist.',pathColor:'env',desc:'Valor de cooling urbano por árbol maduro',sources:[{name:'Valor cooling árbol urbano NL',val:'$8.50 MXN/árbol'}],proxy_min:5.95,proxy_mode:8.50,proxy_max:11.05,adjustments:{dw:0.15,disp:0.0,attr:0.15,drop:0.0},caus:0.7225,gross_p50:15725,net_p50:8197},{label:'41.2 ton CO₂ — pinos nativos',path:'Precio de mercado',pathColor:'teal',desc:'Precio social del carbono',sources:[{name:'Precio CO₂ voluntario',val:'$250 MXN/ton'}],proxy_min:200,proxy_mode:250,proxy_max:300,adjustments:{dw:0.15,disp:0.0,attr:0.15,drop:0.0},caus:0.7225,gross_p50:10300,net_p50:5369}]},
+{id:'v4',cat:'env',name:'Adopta un Árbol',org:'XIGNUX',budget:180000,net_p50:23088,icon:'tree',
+ cardStats:[{v:'106t',l:'CO₂ capturado'},{v:'4,800',l:'m² ecosist.'},{v:'2',l:'Outcomes'}],
+ scenarios:{p10:0.1142,p50:0.1281,p90:0.1423},
+ histogram:{labels:["0.0984","0.1005","0.1025","0.1046","0.1066","0.1087","0.1108","0.1128","0.1149","0.1169","0.1190","0.1210","0.1231","0.1251","0.1272","0.1293","0.1313","0.1334","0.1354","0.1375","0.1395","0.1416","0.1437","0.1457","0.1478","0.1498","0.1519","0.1539","0.1560","0.1580"],data:[4,16,32,73,103,154,262,288,377,463,594,584,660,685,750,714,691,695,577,517,419,390,320,251,164,107,58,31,15,6],colors:["#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11"]},
+ sensitivity:[{label:'CO₂ capturado — mitigación climática local',corr:0.9339},{label:'Servicios ecosistémicos — mejora ambiental',corr:0.3368}],
+ outcomes:[{label:'106 ton CO₂ capturado',path:'Precio de mercado',pathColor:'teal',desc:'Precio social del carbono',sources:[{name:'Precio CO₂ voluntario',val:'$250 MXN/ton'}],proxy_min:187.5,proxy_mode:250,proxy_max:312.5,adjustments:{dw:0.10,disp:0.0,attr:0.10,drop:0.0},caus:0.81,gross_p50:26556,net_p50:17423},{label:'4,800 m² servicios ecosistémicos',path:'Servicios ecosist.',pathColor:'env',desc:'Valor ecosistémico por m²',sources:[{name:'TEEB México — área verde',val:'$1.80 MXN/m²'}],proxy_min:1.26,proxy_mode:1.80,proxy_max:2.34,adjustments:{dw:0.10,disp:0.0,attr:0.10,drop:0.0},caus:0.81,gross_p50:8635,net_p50:5665}]}
+];
+const HEALTH=[
+{id:'h0',cat:'health',name:'Carrera Xignux: Energiza la vida',org:'XIGNUX',budget:350000,net_p50:295884,icon:'heart',
+ cardStats:[{v:'1,000',l:'Participantes'},{v:'2',l:'Outcomes'},{v:'0.85',l:'SROI P50'}],
+ scenarios:{p10:0.6509,p50:0.8454,p90:1.0399},
+ histogram:{labels:["0.5500","0.5671","0.5843","0.6015","0.6187","0.6359","0.6531","0.6703","0.6875","0.7047","0.7219","0.7390","0.7562","0.7734","0.7906","0.8078","0.8250","0.8422","0.8594","0.8766","0.8938","0.9109","0.9281","0.9453","0.9625","0.9797","0.9969","1.0141","1.0313","1.0485"],data:[18,48,72,110,158,210,275,318,352,371,395,510,512,558,622,590,592,542,538,455,405,370,315,250,225,180,175,110,80,28],colors:["#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11"]},
+ sensitivity:[{label:'Proxy participantes — costo sesión bienestar',corr:0.8123},{label:'Proxy participantes — sensibilización sostenibilidad',corr:0.5847}],
+ outcomes:[{label:'1,000 participantes — mejora salud física',path:'Wellbeing / QALY',pathColor:'health',desc:'Valor de una sesión de actividad física supervisada',sources:[{name:'Clase fitness promedio MX',val:'$375'},{name:'Sesión spinning premium',val:'$537.50'},{name:'Clase bootcamp',val:'$700'}],proxy_min:375,proxy_mode:537.50,proxy_max:700,adjustments:{dw:0.30,attr:0.10,disp:0.00,drop:0.00},caus:0.63,gross_p50:537500,net_p50:213334},{label:'1,000 participantes — sensibilización sostenibilidad',path:'Wellbeing / QALY',pathColor:'health',desc:'Cambio de actitud en sostenibilidad',sources:[{name:'Proxy mín.',val:'$390 MXN'},{name:'Proxy moda',val:'$650 MXN'},{name:'Proxy máx.',val:'$910 MXN'}],proxy_min:390,proxy_mode:650,proxy_max:910,adjustments:{dw:0.45,attr:0.40,disp:0.00,drop:0.30},caus:0.55,gross_p50:650000,net_p50:82550}]},
+{id:'h1',cat:'health',name:'Gamer con Causa',org:'XIGNUX',budget:480000,net_p50:264881,icon:'gamepad',
+ cardStats:[{v:'583',l:'Beneficiarios OSC'},{v:'4',l:'OSC apoyadas'},{v:'0.55',l:'SROI P50'}],
+ scenarios:{p10:0.4310,p50:0.5519,p90:0.6724},
+ histogram:{labels:["0.3540","0.3714","0.3889","0.4063","0.4237","0.4412","0.4586","0.4761","0.4935","0.5109","0.5284","0.5458","0.5633","0.5807","0.5981","0.6156","0.6330","0.6505","0.6679","0.6853","0.7028","0.7202","0.7377","0.7551","0.7725","0.7900","0.8074","0.8249","0.8423","0.8597"],data:[22,58,80,118,162,218,280,310,340,358,382,498,488,535,602,565,565,518,508,430,382,350,295,238,210,168,162,102,74,26],colors:["#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11"]},
+ sensitivity:[{label:'Proxy beneficiarios OSC — bienestar y salud',corr:0.7845},{label:'Proxy OSC — fortalecimiento financiero y operativo',corr:0.6123}],
+ outcomes:[{label:'583 beneficiarios — mejora salud y bienestar OSC',path:'Wellbeing / QALY',pathColor:'health',desc:'Valor del beneficio de salud transferido a personas apoyadas por OSC',sources:[{name:'Costo consulta médica IMSS',val:'$698'},{name:'Valor bienestar beneficiario OSC',val:'$1,075'},{name:'Costo sesión salud comunitaria',val:'$1,452'}],proxy_min:698.75,proxy_mode:1075,proxy_max:1451.25,adjustments:{dw:0.20,attr:0.40,disp:0.00,drop:0.00},caus:0.48,gross_p50:626525,net_p50:144397},{label:'4 OSC beneficiadas — fortalecimiento financiero',path:'Costo evitado',pathColor:'amber',desc:'Valor promedio de fortalecimiento operativo',sources:[{name:'Proxy mín.',val:'$52,500 MXN'},{name:'Proxy moda',val:'$70,000 MXN'},{name:'Proxy máx.',val:'$87,500 MXN'}],proxy_min:52500,proxy_mode:70000,proxy_max:87500,adjustments:{dw:0.15,attr:0.25,disp:0.00,drop:0.10},caus:0.75,gross_p50:280000,net_p50:120484}]},
+{id:'h2',cat:'health',name:'Donativo de alimentos Qualtia a OSC',org:'Qualtia / XIGNUX',budget:2500000,net_p50:3918277,icon:'package',
+ cardStats:[{v:'100k',l:'Porciones'},{v:'5,000',l:'Familias'},{v:'500t',l:'Desperdicio evit.'}],
+ scenarios:{p10:1.4462,p50:1.5681,p90:1.6859},
+ histogram:{labels:["1.2678","1.2879","1.3080","1.3281","1.3482","1.3683","1.3884","1.4085","1.4286","1.4487","1.4688","1.4889","1.5090","1.5291","1.5492","1.5693","1.5894","1.6096","1.6297","1.6498","1.6699","1.6900","1.7101","1.7302","1.7503","1.7704","1.7905","1.8106","1.8307","1.8508"],data:[2,11,13,39,85,111,158,260,378,416,572,609,736,814,851,820,830,733,664,522,457,318,214,178,98,46,42,9,12,2],colors:["#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11"]},
+ sensitivity:[{label:'Porciones entregadas — seguridad alimentaria',corr:0.7281},{label:'Toneladas recuperadas — desperdicio evitado',corr:0.5804},{label:'Ahorro alimentario familiar',corr:0.3695},{label:'OSC receptoras — ahorro operativo',corr:0.0813}],
+ outcomes:[{label:'100,000 porciones — reducción inseguridad alimentaria',path:'Precio de mercado',pathColor:'teal',desc:'Valor de mercado de una porción',sources:[{name:'Precio porción comida nutritiva MX',val:'$36'},{name:'Proxy porción alimento',val:'$45'},{name:'Precio comida preparada',val:'$54'}],proxy_min:36,proxy_mode:45,proxy_max:54,adjustments:{dw:0.20,attr:0.10,disp:0.05,drop:0.00},caus:0.684,gross_p50:4500000,net_p50:2105352},{label:'5,000 familias — ahorro alimentario familiar',path:'Costo evitado',pathColor:'amber',desc:'Reducción mensual del gasto familiar',sources:[{name:'Ahorro mínimo canasta',val:'$285'},{name:'Ahorro promedio familia',val:'$380'},{name:'Ahorro máximo estimado',val:'$475'}],proxy_min:285,proxy_mode:380,proxy_max:475,adjustments:{dw:0.25,attr:0.15,disp:0.00,drop:0.00},caus:0.6375,gross_p50:1900000,net_p50:772172},{label:'20,000 unidades — ahorro operativo OSC',path:'Costo evitado',pathColor:'amber',desc:'Ahorro operativo por unidad de alimento recibido',sources:[{name:'Ahorro mínimo por unidad',val:'$8.75'},{name:'Proxy ahorro operativo',val:'$12.50'},{name:'Ahorro máximo estimado',val:'$16.25'}],proxy_min:8.75,proxy_mode:12.50,proxy_max:16.25,adjustments:{dw:0.10,attr:0.20,disp:0.00,drop:0.05},caus:0.72,gross_p50:250000,net_p50:123120},{label:'500 ton recuperadas — reducción desperdicio alimentario',path:'Precio de mercado',pathColor:'teal',desc:'Valor social de recuperar alimentos',sources:[{name:'Valor mínimo ton alimento',val:'$2,080'},{name:'Proxy ton recuperada',val:'$3,200'},{name:'Valor máximo ton',val:'$4,320'}],proxy_min:2080,proxy_mode:3200,proxy_max:4320,adjustments:{dw:0.15,attr:0.10,disp:0.00,drop:0.02},caus:0.765,gross_p50:1600000,net_p50:917633}]}
+];
+const EMP=[
+{id:'p0',cat:'emp',name:'Xignux Challenge',org:'Tec de Monterrey',budget:1000000,net_p50:2424575,icon:'bolt',
+ cardStats:[{v:'1,080',l:'Estudiantes'},{v:'4',l:'Proyectos fin.'},{v:'2',l:'Capas'}],
+ scenarios:{p10:2.0601,p50:2.4246,p90:2.9981},
+ histogram:{labels:["1.7477","1.8067","1.8658","1.9249","1.9840","2.0430","2.1021","2.1612","2.2202","2.2793","2.3384","2.3975","2.4565","2.5156","2.5747","2.6337","2.6928","2.7519","2.8110","2.8700","2.9291","2.9882","3.0473","3.1063","3.1654","3.2245","3.2835","3.3426","3.4017","3.4608"],data:[8,54,140,276,382,545,669,661,680,664,633,595,513,530,465,470,408,358,354,292,257,237,217,181,141,107,91,39,24,9],colors:["#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11"]},
+ sensitivity:[{label:'Proxy 1A — bootcamp emprendimiento e innovación',corr:0.9833},{label:'Multiplicador impacto — proyectos financiados',corr:0.1161},{label:'Proxy 1B — networking con referentes de industria',corr:0.1055}],
+ outcomes:[{label:'1,080 Estudiantes — bootcamp emprendimiento',path:'Costo evitado',pathColor:'amber',desc:'Habilidades de emprendimiento e innovación sostenible',sources:[{name:'INADEM capacitación básica',val:'$2,000'},{name:'Promedio mercado México',val:'$2,500'},{name:'Tec Continuing Education',val:'$4,500'}],proxy_min:2000,proxy_mode:2500,proxy_max:4500,adjustments:{dw:0.35,attr:0.60,disp:0.10,drop:0.15},caus:null,gross_p50:2700000,net_p50:1889965},{label:'1,080 Estudiantes — networking industria',path:'Precio de mercado',pathColor:'teal',desc:'Red profesional con referentes de industria',sources:[{name:'Evento networking básico',val:'$200'},{name:'Promedio mercado',val:'$300'},{name:'Evento premium',val:'$500'}],proxy_min:200,proxy_mode:300,proxy_max:500,adjustments:{dw:0.35,attr:0.60,disp:0.10,drop:0.15},caus:null,gross_p50:324000,net_p50:213123},{label:'4 Proyectos — implementación sostenibilidad',path:'Precio de mercado',pathColor:'teal',desc:'Proyectos financiados con grant de $75,000 MXN c/u',sources:[{name:'Grants Capa 2',val:'$300,000 total'},{name:'Multiplicador moda',val:'2×'}],proxy_min:450000,proxy_mode:600000,proxy_max:900000,adjustments:{dw:0.15,attr:0.75,disp:0.10,drop:0.15},caus:null,gross_p50:600000,net_p50:315233}]},
+{id:'p1',cat:'emp',name:'Tiger Tank',org:'UANL',budget:250000,net_p50:228799,icon:'trophy',
+ cardStats:[{v:'70',l:'Estudiantes'},{v:'3',l:'Beca Transforma'},{v:'2',l:'Capas'}],
+ scenarios:{p10:0.8072,p50:0.9152,p90:1.0357},
+ histogram:{labels:["0.6868","0.7032","0.7195","0.7359","0.7523","0.7687","0.7851","0.8015","0.8179","0.8343","0.8506","0.8670","0.8834","0.8998","0.9162","0.9326","0.9490","0.9654","0.9818","0.9981","1.0145","1.0309","1.0473","1.0637","1.0801","1.0965","1.1129","1.1292","1.1456","1.1620"],data:[3,24,45,96,153,238,301,382,496,570,633,658,718,716,758,671,619,553,503,404,397,292,239,190,139,90,68,28,9,7],colors:["#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11"]},
+ sensitivity:[{label:'Proxy 2A — pitch y plan de negocio',corr:0.9266},{label:'Multiplicador impacto — Beca Transforma',corr:0.3140},{label:'Proxy 2B — networking con ejecutivos',corr:0.1834}],
+ outcomes:[{label:'70 Estudiantes — pitch y plan de negocio',path:'Costo evitado',pathColor:'amber',desc:'Habilidades de pitch y plan de negocio',sources:[{name:'Startup Grind workshop',val:'$2,500'},{name:'Promedio mercado esp.',val:'$3,500'},{name:'Endeavor ScaleUp',val:'$5,000'}],proxy_min:2500,proxy_mode:3500,proxy_max:5000,adjustments:{dw:0.25,attr:0.70,disp:0.08,drop:0.12},caus:null,gross_p50:245000,net_p50:139646},{label:'70 Estudiantes — networking ejecutivos',path:'Precio de mercado',pathColor:'teal',desc:'Red profesional con panel de industria',sources:[{name:'Evento networking básico',val:'$300'},{name:'Promedio mercado',val:'$500'},{name:'Evento premium ejecutivos',val:'$800'}],proxy_min:300,proxy_mode:500,proxy_max:800,adjustments:{dw:0.25,attr:0.70,disp:0.08,drop:0.12},caus:null,gross_p50:35000,net_p50:20171},{label:'3 Proyectos — Beca Transforma (Capa 2)',path:'Precio de mercado',pathColor:'teal',desc:'Proyectos financiados con $25,000 MXN c/u',sources:[{name:'Becas Capa 2',val:'$75,000 total'},{name:'Multiplicador moda',val:'2×'}],proxy_min:112500,proxy_mode:150000,proxy_max:187500,adjustments:{dw:0.10,attr:0.80,disp:0.05,drop:0.12},caus:null,gross_p50:150000,net_p50:68189}]},
+{id:'p2',cat:'emp',name:'Premio Xignux-UDEM Energía Alternativa',org:'UDEM',budget:560000,net_p50:545789,icon:'sun-energy',
+ cardStats:[{v:'80',l:'Estudiantes'},{v:'2',l:'Proyectos OSC'},{v:'3',l:'Capas'}],
+ scenarios:{p10:0.8626,p50:0.9746,p90:1.0941},
+ histogram:{labels:["0.7174","0.7352","0.7530","0.7708","0.7886","0.8064","0.8242","0.8420","0.8598","0.8776","0.8954","0.9132","0.9310","0.9488","0.9666","0.9844","1.0022","1.0200","1.0378","1.0556","1.0734","1.0912","1.1090","1.1268","1.1446","1.1624","1.1802","1.1980","1.2158","1.2336"],data:[3,9,22,72,102,176,236,326,453,533,606,665,688,775,754,729,695,642,547,505,412,326,244,187,122,79,48,25,15,4],colors:["#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#E24B4A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#2D5F8A","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11","#3B6D11"]},
+ sensitivity:[{label:'Proxy 3A — energías limpias + consultoría aplicada',corr:0.8317},{label:'Multiplicador impacto — proyectos OSC financiados',corr:0.5273},{label:'Proxy 3B — networking intersectorial',corr:0.1159}],
+ outcomes:[{label:'80 Estudiantes — formación energías limpias',path:'Costo evitado',pathColor:'amber',desc:'Habilidades técnicas en energías limpias',sources:[{name:'GIZ capacitación básica',val:'$4,000'},{name:'UDEM diplomado parcial',val:'$5,500'},{name:'SENER programa completo',val:'$7,500'}],proxy_min:4000,proxy_mode:5500,proxy_max:7500,adjustments:{dw:0.20,attr:0.65,disp:0.05,drop:0.10},caus:null,gross_p50:440000,net_p50:325083},{label:'80 Estudiantes — networking intersectorial',path:'Precio de mercado',pathColor:'teal',desc:'Red intersectorial empresa + academia + OSC',sources:[{name:'Evento networking básico',val:'$400'},{name:'Promedio multi-sector',val:'$600'},{name:'Evento premium consultoría',val:'$1,000'}],proxy_min:400,proxy_mode:600,proxy_max:1000,adjustments:{dw:0.20,attr:0.65,disp:0.05,drop:0.10},caus:null,gross_p50:48000,net_p50:37676},{label:'2 Proyectos OSC — sistemas energía limpia',path:'Precio de mercado',pathColor:'teal',desc:'Infraestructura energía limpia en OSCs',sources:[{name:'Financiamiento Capa 2',val:'$168,000 total'},{name:'Multiplicador moda',val:'2×'}],proxy_min:252000,proxy_mode:336000,proxy_max:504000,adjustments:{dw:0.10,attr:0.80,disp:0.03,drop:0.05},caus:null,gross_p50:336000,net_p50:178861}]}
+];
+
+const ALL_PROJECTS=[...EDU,...ENV,...HEALTH,...EMP];
+
+// ══ PARETO PROJECTS — UPDATED SCORES ══
+// s = [urgencia(0), calidad_evidencia(1), complejidad(2-inv), riesgo(3-inv), pot_medicion(4)]
+const PARETO_PROJECTS=[
+ {id:'e0',name:'Cátedra Jorge L. Garza',      cat:'Educación',      budget:215000, sroi:7.5588, s:[2,2,1,1,3]},
+ {id:'e1',name:'Premio Rómulo Garza',          cat:'Educación',      budget:1050000,sroi:0.3847, s:[1,2,1,3,3]},
+ {id:'e2',name:'Academia de Exploradores Xignux',cat:'Educación',   budget:400000, sroi:0.1921, s:[1,2,1,4,1]},
+ {id:'e3',name:'Red Sumarse Nuevo León',       cat:'Educación',      budget:500000, sroi:3.8352, s:[3,2,3,1,2]},
+ {id:'v0',name:'Energía para Todos',           cat:'Ambiente',       budget:500000, sroi:2.1031, s:[4,5,3,1,5]},
+ {id:'v1',name:'Reforestación Mariposa Monarca',cat:'Ambiente',      budget:350000, sroi:0.1106, s:[1,1,3,4,1]},
+ {id:'v2',name:'Alianza Parque Chipinque',     cat:'Ambiente',       budget:120000, sroi:0.0127, s:[1,1,1,5,1]},
+ {id:'v3',name:'Reforestación Tepotzotlán',    cat:'Ambiente',       budget:280000, sroi:0.0485, s:[1,1,3,5,1]},
+ {id:'v4',name:'Adopta un Árbol',              cat:'Ambiente',       budget:180000, sroi:0.1281, s:[1,1,1,4,1]},
+ {id:'h0',name:'Carrera Xignux: Energiza la vida',cat:'Salud',      budget:350000, sroi:0.8454, s:[1,1,1,2,4]},
+ {id:'h1',name:'Gamer con Causa',              cat:'Salud',          budget:480000, sroi:0.5519, s:[3,1,1,3,2]},
+ {id:'h2',name:'Donativo de alimentos Qualtia',cat:'Salud',          budget:2500000,sroi:1.5681, s:[5,5,3,1,5]},
+ {id:'p0',name:'Xignux Challenge',             cat:'Emprendimiento', budget:1000000,sroi:2.4246, s:[1,1,2,1,1]},
+ {id:'p1',name:'Tiger Tank',                   cat:'Emprendimiento', budget:250000, sroi:0.9152, s:[1,2,1,2,3]},
+ {id:'p2',name:'Premio Xignux-UDEM Energía Alt.',cat:'Emprendimiento',budget:560000,sroi:0.9746, s:[1,2,3,2,3]},
+];
+
+// ══ BENEFICIO PROJECTS — 5 dimensiones (scores de la evaluación)
+// dims: [reputacion, retencion, talento, innovacion, relaciones]
+// Scores calculados a partir de las 14 preguntas del documento de evaluación Xignux.
+// Reputación (Q1–Q3 avg), Retención (Q4–Q6 avg), Talento (Q7–Q9 avg),
+// Innovación (Q10–Q11 avg), Relaciones (Q12–Q14 avg).
+// Score final = promedio de las 14 preguntas.
+const BEN_PROJECTS=[
+ // 1. Xignux Challenge (Tec) — Score: 68/14 = 4.86
+ {id:'p0',name:'Xignux Challenge',             cat:'Emprendimiento', budget:1000000, score:4.857, dims:[5.00,4.67,4.67,5.00,4.67]},
+ // 3. Cátedra Jorge L. Garza (UDEM) — Score: 60/14 = 4.29
+ {id:'e0',name:'Cátedra Jorge L. Garza',       cat:'Educación',      budget:215000,  score:4.286, dims:[4.33,4.00,4.67,4.00,4.33]},
+ // 5. Premio Xignux-UDEM Energía Alternativa — Score: 59/14 = 4.21
+ {id:'p2',name:'Premio Xignux-UDEM Energía Alt.',cat:'Emprendimiento',budget:560000, score:4.214, dims:[4.00,3.67,4.00,5.00,4.67]},
+ // 4. Premio Rómulo Garza — Score: 58/14 = 4.14
+ {id:'e1',name:'Premio Rómulo Garza',          cat:'Educación',      budget:1050000, score:4.143, dims:[4.67,3.33,3.67,4.50,4.67]},
+ // 10. Energía para Todos — Score: 53/14 = 3.79
+ {id:'v0',name:'Energía para Todos',           cat:'Ambiente',       budget:500000,  score:3.786, dims:[3.67,4.67,2.33,4.00,4.33]},
+ // 2. Tiger Tank (UANL) — Score: 50/14 = 3.57
+ {id:'p1',name:'Tiger Tank',                   cat:'Emprendimiento', budget:250000,  score:3.571, dims:[3.33,3.67,3.67,3.50,3.67]},
+ // 7. Red SumaRSE Nuevo León — Score: 42/14 = 3.00
+ {id:'e3',name:'Red SumaRSE Nuevo León',       cat:'Educación',      budget:500000,  score:3.000, dims:[3.00,2.67,1.33,3.00,5.00]},
+ // 9. Carrera Xignux: Energiza la vida — Score: 41/14 = 2.93
+ {id:'h0',name:'Carrera Xignux: Energiza la vida',cat:'Salud',       budget:350000,  score:2.929, dims:[3.33,3.67,2.00,2.00,3.33]},
+ // 11. Reforestación Santuario Mariposa Monarca — Score: 41/14 = 2.93
+ {id:'v1',name:'Reforestación Mariposa Monarca',cat:'Ambiente',      budget:350000,  score:2.929, dims:[3.00,4.00,1.33,2.00,4.00]},
+ // 14. Tiger Tank Reforestación (UANL) — Score: 40/14 = 2.86
+ {id:'v3',name:'Tiger Tank Reforestación',     cat:'Ambiente',       budget:280000,  score:2.857, dims:[2.67,3.67,2.33,2.00,3.33]},
+ // 6. Gamer con Causa — Score: 39/14 = 2.79
+ {id:'h1',name:'Gamer con Causa',              cat:'Salud',          budget:480000,  score:2.786, dims:[2.67,3.67,2.33,2.50,2.67]},
+ // 13. Alianza Parque Ecológico Chipinque — Score: 39/14 = 2.79
+ {id:'v2',name:'Alianza Parque Chipinque',     cat:'Ambiente',       budget:120000,  score:2.786, dims:[2.33,3.33,1.33,3.00,3.67]},
+ // 12. Programa Adopta un Árbol — Score: 36/14 = 2.57
+ {id:'v4',name:'Programa Adopta un Árbol',     cat:'Ambiente',       budget:180000,  score:2.571, dims:[2.33,3.67,1.33,2.00,3.33]},
+ // 8. Academia de Exploradores Xignux — Score: 34/14 = 2.43
+ {id:'e2',name:'Academia de Exploradores Xignux',cat:'Educación',    budget:400000,  score:2.429, dims:[2.00,4.33,1.33,2.00,2.33]},
+ // 15. Donativo de alimentos Qualtia — Score: 29/14 = 2.07
+ {id:'h2',name:'Donativo de alimentos Qualtia',cat:'Salud',          budget:2500000, score:2.071, dims:[2.00,3.00,1.00,1.50,2.33]},
+];
+
+// ══ CARTESIAN DATA (from Excel) ══
+const CART_PROJECTS=[
+ {id:'p0',name:'Xignux Challenge',             cat:'emp', bNorm:0.972, eNorm:0.58, actual:1000000},
+ {id:'p1',name:'Tiger Tank',                   cat:'emp', bNorm:0.714, eNorm:0.52, actual:250000},
+ {id:'e0',name:'Cátedra Jorge L. Garza',       cat:'edu', bNorm:0.858, eNorm:0.74, actual:215000},
+ {id:'e1',name:'Premio Rómulo Garza',          cat:'edu', bNorm:0.828, eNorm:0.48, actual:1050000},
+ {id:'p2',name:'Premio Xignux-UDEM Energía Alt.',cat:'emp',bNorm:0.842, eNorm:0.46, actual:560000},
+ {id:'h1',name:'Gamer con Causa',              cat:'health',bNorm:0.558, eNorm:0.48, actual:480000},
+ {id:'e3',name:'Red Sumarse Nuevo León',       cat:'edu', bNorm:0.600, eNorm:0.58, actual:500000},
+ {id:'e2',name:'Academia de Exploradores Xignux',cat:'edu',bNorm:0.486, eNorm:0.38, actual:400000},
+ {id:'h0',name:'Carrera Xignux: Energiza la vida',cat:'health',bNorm:0.586, eNorm:0.52, actual:350000},
+ {id:'v0',name:'Energía para Todos',           cat:'env', bNorm:0.758, eNorm:0.78, actual:500000},
+ {id:'v1',name:'Reforest. Mariposa Monarca',   cat:'env', bNorm:0.586, eNorm:0.26, actual:350000},
+ {id:'v4',name:'Adopta un Árbol',              cat:'env', bNorm:0.514, eNorm:0.30, actual:180000},
+ {id:'v2',name:'Alianza Parque Chipinque',     cat:'env', bNorm:0.558, eNorm:0.30, actual:120000},
+ {id:'v3',name:'Reforestación Tepotzotlán',    cat:'env', bNorm:0.574, eNorm:0.24, actual:280000},
+ {id:'h2',name:'Donativo de alimentos Qualtia',cat:'health',bNorm:0.414, eNorm:0.80, actual:2500000},
+];
+
+// ══ REDISTRIBUTION DATA (pre-calculated) ══
+const REDIST_PROJECTS=[
+ {id:'p0',name:'Xignux Challenge',             cat:'emp',  bNorm:0.972, eNorm:0.58, magnitud:1.131894, angulo:30.82, factor:0.9924, magAj:1.1232, actual:1000000, minimo:600000, optimo:915505, cambio:-84495, nuevo:915505},
+ {id:'p1',name:'Tiger Tank',                   cat:'emp',  bNorm:0.714, eNorm:0.52, magnitud:0.883287, angulo:36.07, factor:0.9970, magAj:0.8806, actual:250000,  minimo:150000, optimo:397351, cambio:59015,  nuevo:309015},
+ {id:'e0',name:'Cátedra Jorge L. Garza',       cat:'edu',  bNorm:0.858, eNorm:0.74, magnitud:1.133033, angulo:40.78, factor:0.9993, magAj:1.1323, actual:215000,  minimo:129000, optimo:447039, cambio:50753,  nuevo:265753},
+ {id:'e1',name:'Premio Rómulo Garza',          cat:'edu',  bNorm:0.828, eNorm:0.48, magnitud:0.957071, angulo:30.10, factor:0.9916, magAj:0.9490, actual:1050000, minimo:630000, optimo:896560, cambio:-153440,nuevo:896560},
+ {id:'p2',name:'Premio Xignux-UDEM Energía Alt.',cat:'emp',bNorm:0.842, eNorm:0.46, magnitud:0.959460, angulo:28.65, factor:0.9898, magAj:0.9497, actual:560000,  minimo:336000, optimo:602761, cambio:132193, nuevo:692193},
+ {id:'h1',name:'Gamer con Causa',              cat:'health',bNorm:0.558, eNorm:0.48, magnitud:0.736046, angulo:40.70, factor:0.9993, magAj:0.7355, actual:480000,  minimo:288000, optimo:494601, cambio:113309, nuevo:593309},
+ {id:'e3',name:'Red Sumarse Nuevo León',       cat:'edu',  bNorm:0.600, eNorm:0.58, magnitud:0.834506, angulo:44.03, factor:1.0000, magAj:0.8345, actual:500000,  minimo:300000, optimo:534394, cambio:118030, nuevo:618030},
+ {id:'e2',name:'Academia de Exploradores Xignux',cat:'edu',bNorm:0.486, eNorm:0.38, magnitud:0.616925, angulo:38.02, factor:0.9981, magAj:0.6158, actual:400000,  minimo:240000, optimo:412965, cambio:94424,  nuevo:494424},
+ {id:'h0',name:'Carrera Xignux: Energiza la vida',cat:'health',bNorm:0.586, eNorm:0.52, magnitud:0.783451, angulo:41.58, factor:0.9996, magAj:0.7831, actual:350000, minimo:210000, optimo:429964, cambio:82621, nuevo:432621},
+ {id:'v0',name:'Energía para Todos',           cat:'env',  bNorm:0.758, eNorm:0.78, magnitud:1.087641, angulo:45.82, factor:1.0000, magAj:1.0876, actual:500000,  minimo:300000, optimo:605497, cambio:118030, nuevo:618030},
+ {id:'v1',name:'Reforest. Mariposa Monarca',   cat:'env',  bNorm:0.586, eNorm:0.26, magnitud:0.641090, angulo:23.93, factor:0.9831, magAj:0.6303, actual:350000,  minimo:210000, optimo:387038, cambio:82621,  nuevo:432621},
+ {id:'v4',name:'Adopta un Árbol',              cat:'env',  bNorm:0.514, eNorm:0.30, magnitud:0.595144, angulo:30.27, factor:0.9917, magAj:0.5902, actual:180000,  minimo:108000, optimo:273789, cambio:42491,  nuevo:222491},
+ {id:'v2',name:'Alianza Parque Chipinque',     cat:'env',  bNorm:0.558, eNorm:0.30, magnitud:0.633533, angulo:28.26, factor:0.9894, magAj:0.6268, actual:120000,  minimo:72000,  optimo:248057, cambio:28327,  nuevo:148327},
+ {id:'v3',name:'Reforestación Tepotzotlán',    cat:'env',  bNorm:0.574, eNorm:0.24, magnitud:0.622154, angulo:22.69, factor:0.9811, magAj:0.6104, actual:280000,  minimo:168000, optimo:339454, cambio:66097,  nuevo:346097},
+ {id:'h2',name:'Donativo de alimentos Qualtia',cat:'health',bNorm:0.414, eNorm:0.80, magnitud:0.900775, angulo:62.64, factor:0.9882, magAj:0.8901, actual:2500000, minimo:1500000,optimo:1750025,cambio:-749975,nuevo:1750025},
+];
+
+// ══════════════════════════════════════════════════════════════
+// CHART REGISTRY
+// ══════════════════════════════════════════════════════════════
+const CR={};
+const dC=id=>{if(CR[id]){CR[id].destroy();delete CR[id];}};
+const rC=(id,c)=>CR[id]=c;
+
+// ══════════════════════════════════════════════════════════════
+// PROJECT CARDS
+// ══════════════════════════════════════════════════════════════
+function sroiClass(p50){return p50>=1?'high':p50>=0.3?'mid':'low';}
+function cardHTML(p){
+  const isEnv=p.cat==='env',isHealth=p.cat==='health',isEmp=p.cat==='emp';
+  const sc=p.scenarios;
+  const bC=isEnv?'env':isHealth?'health':isEmp?'emp':'';
+  const cardCls=isEnv?'env-card':isHealth?'health-card':isEmp?'emp-card':'edu-card';
+  const iconCls=isEnv?'env':isHealth?'health':isEmp?'emp':'edu';
+  return `<div class="proj-card ${cardCls}" onclick="showProjectDetail('${p.id}')">
+    <div class="proj-header">
+      <div class="proj-icon ${iconCls}">${ic(p.icon)}</div>
+      <div class="proj-right">
+        <div class="proj-budget ${bC}">$${p.budget.toLocaleString('es-MX')} MXN</div>
+        <div class="proj-sroi ${sroiClass(sc.p50)}">SROI ${sc.p50.toFixed(4)}x</div>
+      </div>
+    </div>
+    <div class="proj-name">${p.name}</div>
+    <div class="proj-org">${p.org}</div>
+    <div class="proj-stats">${p.cardStats.map(s=>`<div class="proj-stat"><div class="proj-stat-val ${bC}">${s.v}</div><div class="proj-stat-label">${s.l}</div></div>`).join('')}</div>
+  </div>`;
+}
+function renderAllCards(){
+  document.getElementById('edu-grid').innerHTML=EDU.map(cardHTML).join('');
+  document.getElementById('env-grid').innerHTML=ENV.map(cardHTML).join('');
+  document.getElementById('health-grid').innerHTML=HEALTH.map(cardHTML).join('');
+  document.getElementById('emp-grid').innerHTML=EMP.map(cardHTML).join('');
+}
+
+// ══════════════════════════════════════════════════════════════
+// COMPARISON CHART
+// ══════════════════════════════════════════════════════════════
+const CAT_COLORS={edu:'#1B3A5C',env:'#1a5c3a',health:'#7B2D8B',emp:'#8B4513'};
+let currentSortMode='sroi';
+function buildComparisonData(sortMode){
+  let projs=[...ALL_PROJECTS];
+  if(sortMode==='sroi') projs.sort((a,b)=>b.scenarios.p50-a.scenarios.p50);
+  else projs.sort((a,b)=>['edu','env','health','emp'].indexOf(a.cat)-['edu','env','health','emp'].indexOf(b.cat)||b.scenarios.p50-a.scenarios.p50);
+  const labels=projs.map(p=>p.name.length>22?p.name.slice(0,20)+'…':p.name);
+  const p50=projs.map(p=>p.scenarios.p50);
+  const p10=projs.map(p=>p.scenarios.p10);
+  const p90=projs.map(p=>p.scenarios.p90);
+  const bgColors=projs.map(p=>CAT_COLORS[p.cat]);
+  return {labels,p50,p10,p90,bgColors,projs};
+}
+function renderComparisonChart(sortMode){
+  dC('chart-comparison');
+  const {labels,p50,p10,p90,bgColors,projs}=buildComparisonData(sortMode);
+  const ctx=document.getElementById('chart-comparison');
+  if(!ctx)return;
+  const errPlugin={id:'errBar',afterDraw(chart){
+    const{ctx:c,scales:{x,y}}=chart;
+    chart.data.datasets[0].data.forEach((val,i)=>{
+      const xPos=x.getPixelForValue(i),yTop=y.getPixelForValue(p90[i]),yBot=y.getPixelForValue(p10[i]),cap=5;
+      c.save();c.strokeStyle='rgba(0,0,0,0.35)';c.lineWidth=1.5;
+      c.beginPath();c.moveTo(xPos,yTop);c.lineTo(xPos,yBot);c.stroke();
+      c.beginPath();c.moveTo(xPos-cap,yTop);c.lineTo(xPos+cap,yTop);c.stroke();
+      c.beginPath();c.moveTo(xPos-cap,yBot);c.lineTo(xPos+cap,yBot);c.stroke();
+      c.restore();
+    });
+  }};
+  rC('chart-comparison',new Chart(ctx,{
+    type:'bar',plugins:[errPlugin],
+    data:{labels,datasets:[{label:'SROI P50',data:p50,backgroundColor:bgColors,borderWidth:0,borderRadius:4,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{title:v=>projs[v[0].dataIndex].name,label:v=>{const i=v.dataIndex;return[`SROI P50: ${p50[i].toFixed(4)}x`,`P10: ${p10[i].toFixed(4)}x`,`P90: ${p90[i].toFixed(4)}x`,`Inversión: $${projs[i].budget.toLocaleString('es-MX')} MXN`];}}}},
+      scales:{x:{ticks:{font:{size:10},maxRotation:45,minRotation:30,color:'#555'},grid:{display:false}},
+        y:{ticks:{font:{size:10},callback:v=>`${v}x`,color:'#555'},grid:{color:'rgba(0,0,0,0.05)'},title:{display:true,text:'SROI (veces)',font:{size:11},color:'#888'}}},
+      onClick:(e,els)=>{if(els.length){const{projs}=buildComparisonData(currentSortMode);showProjectDetail(projs[els[0].index].id);showPage('projects');}}}
+  }));
+}
+function sortComparison(mode){
+  currentSortMode=mode;
+  document.querySelectorAll('.comp-sort-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('sort-'+mode+'-btn').classList.add('active');
+  renderComparisonChart(mode);
+}
+
+// ══════════════════════════════════════════════════════════════
+// PROJECT FILTER
+// ══════════════════════════════════════════════════════════════
+function filterProjects(cat,btn){
+  document.querySelectorAll('.cat-pill').forEach(p=>p.classList.remove('active-edu','active-env','active-health','active-emp','active-all'));
+  const clsMap={all:'active-all',edu:'active-edu',env:'active-env',health:'active-health',emp:'active-emp'};
+  btn.classList.add(clsMap[cat]);
+  const secEdu=document.getElementById('section-edu'),secEnv=document.getElementById('section-env');
+  const secH=document.getElementById('section-health'),secEmp=document.getElementById('section-emp');
+  const pill=document.getElementById('proj-count-pill');
+  const show=(edu,env,health,emp,txt,bg,clr)=>{
+    secEdu.style.display=edu;secEnv.style.display=env;secH.style.display=health;secEmp.style.display=emp;
+    pill.textContent=txt;pill.style.background=bg;pill.style.color=clr;
+  };
+  if(cat==='all') show('','','','','15 proyectos','','');
+  else if(cat==='edu') show('','none','none','none','4 proyectos · Educación','#EDF2FA','var(--pri)');
+  else if(cat==='env') show('none','','none','none','5 proyectos · Medio Ambiente','#E1F5EE','var(--env)');
+  else if(cat==='health') show('none','none','','none','3 proyectos · Salud','#F5EAF9','var(--health)');
+  else if(cat==='emp') show('none','none','none','','3 proyectos · Emprendimiento','#FAF0E6','var(--emp)');
+}
+
+// ══════════════════════════════════════════════════════════════
+// PROJECT DETAIL VIEW
+// ══════════════════════════════════════════════════════════════
+function showProjectDetail(pid){
+  const p=ALL_PROJECTS.find(x=>x.id===pid);
+  if(!p)return;
+  const isEnv=p.cat==='env',isHealth=p.cat==='health',isEmp=p.cat==='emp';
+  const sc=p.scenarios;
+  const p10=sc.p10.toFixed(4),p50=sc.p50.toFixed(4),p90=sc.p90.toFixed(4);
+  let proxyRows='';
+  p.outcomes.forEach(o=>{
+    const minV=o.proxy_min!==undefined?o.proxy_min:(o.sueldo_base*o.pct_min*12);
+    const modV=o.proxy_mode!==undefined?o.proxy_mode:(o.sueldo_base*o.pct_mode*12);
+    const maxV=o.proxy_max!==undefined?o.proxy_max:(o.sueldo_base*o.pct_max*12);
+    const fmtN=n=>Number(n).toLocaleString('es-MX',{maximumFractionDigits:2});
+    const srcHtml=(o.sources||[]).map(s=>`<div style="font-size:.72rem">${s.name}: <strong>${s.val}</strong></div>`).join('');
+    const adj=o.adjustments||{};
+    const causLine=o.caus!=null?` · Causalidad ${(o.caus*100).toFixed(2)}%`:'';
+    proxyRows+=`<tr><td><strong style="font-size:.8rem">${o.label}</strong><br><span style="color:var(--muted);font-size:.73rem">${o.desc||''}</span></td>
+      <td><span class="path-badge ${o.pathColor||''}">${o.path||'—'}</span></td>
+      <td>$${fmtN(minV)}</td><td>$${fmtN(modV)}</td><td>$${fmtN(maxV)}</td>
+      <td>${srcHtml}<div style="font-size:.7rem;color:var(--muted);margin-top:.2rem">DW ${((adj.dw||0)*100).toFixed(0)}% · Attr ${((adj.attr||0)*100).toFixed(0)}% · Disp ${((adj.disp||0)*100).toFixed(0)}%${adj.drop>0?' · Drop '+((adj.drop)*100).toFixed(0)+'%':''}${causLine}</div></td>
+    </tr>`;
+  });
+  const sensArr=p.sensitivity||[];
+  const maxCorr=sensArr[0]?.corr||1;
+  const corrBars=sensArr.map(s=>{
+    const pct=(s.corr/maxCorr*100).toFixed(0);
+    const col=isHealth?(pct>70?'#7B2D8B':pct>40?'#A044B4':'#888'):isEnv?(pct>70?'#1a5c3a':pct>40?'#0F6E56':'#888'):isEmp?(pct>70?'#8B4513':pct>40?'#B5651D':'#888'):(pct>70?'#1B3A5C':pct>40?'#0F6E56':'#888');
+    return `<div class="corr-row"><div class="corr-label">${s.label}</div><div class="corr-bar-wrap"><div class="corr-bar" style="width:${pct}%;background:${col}"></div></div><div class="corr-val" style="color:${col}">${s.corr.toFixed(4)}</div></div>`;
+  }).join('');
+  const treeRows=p.outcomes.map(o=>{
+    const minV=o.proxy_min!==undefined?o.proxy_min:(o.sueldo_base*o.pct_min*12);
+    const modV=o.proxy_mode!==undefined?o.proxy_mode:(o.sueldo_base*o.pct_mode*12);
+    const maxV=o.proxy_max!==undefined?o.proxy_max:(o.sueldo_base*o.pct_max*12);
+    const fmtN=n=>Number(n).toLocaleString('es-MX',{maximumFractionDigits:2});
+    const pt=(o.path||'').toLowerCase();
+    let pathHtml='';
+    if(pt.includes('capital')) pathHtml=`<span style="background:#EDF2FA;color:var(--pri);padding:.2rem .6rem;border-radius:4px">¿Mercado comparable? <strong style="color:var(--danger)">No</strong></span> → <span style="background:#EDF2FA;color:var(--pri);padding:.2rem .6rem;border-radius:4px">¿Afecta ingreso laboral? <strong style="color:var(--teal)">Sí</strong></span> → <span class="path-badge amber">Capital humano</span>`;
+    else if(pt.includes('wellbeing')||pt.includes('qaly')) pathHtml=`<span style="background:#F5EAF9;color:var(--health);padding:.2rem .6rem;border-radius:4px">¿Mercado comparable? <strong style="color:var(--danger)">Parcial</strong></span> → <span class="path-badge health">Wellbeing / QALY</span>`;
+    else if(pt.includes('costo evitado')) pathHtml=`<span style="background:#FAF0E6;color:var(--emp);padding:.2rem .6rem;border-radius:4px">¿Precio de mercado directo? <strong style="color:var(--danger)">No</strong></span> → <span class="path-badge amber">Costo evitado</span>`;
+    else pathHtml=`<span style="background:#EDF2FA;color:var(--pri);padding:.2rem .6rem;border-radius:4px">¿Mercado comparable? <strong style="color:var(--teal)">Sí</strong></span> → <span class="path-badge ${o.pathColor||'teal'}">${o.path}</span>`;
+    return `<div style="background:#f8f7f4;border-radius:var(--radius);padding:1rem;margin-bottom:.75rem">
+      <div style="font-weight:600;font-size:.88rem;color:var(--pri);margin-bottom:.4rem">${o.label}</div>
+      <div style="font-size:.8rem;color:var(--muted);margin-bottom:.5rem">${o.desc||''}</div>
+      <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;font-size:.8rem"><span style="background:#EDF2FA;color:var(--pri);padding:.2rem .6rem;border-radius:4px;font-weight:600">Outcome</span> → ${pathHtml}</div>
+      <div style="margin-top:.6rem;font-size:.77rem;color:var(--muted)">Proxy: <strong>Min $${fmtN(minV)} · Moda $${fmtN(modV)} · Máx $${fmtN(maxV)} MXN</strong> | Bruto P50: <strong>$${Number(o.gross_p50||0).toLocaleString('es-MX')}</strong> | Neto P50: <strong>$${Number(o.net_p50||0).toLocaleString('es-MX')}</strong></div>
+    </div>`;
+  }).join('');
+  const noteClass=isHealth?'health':isEnv?'env':isEmp?'emp':'';
+  const iconCls=isEnv?'env':isHealth?'health':isEmp?'emp':'edu';
+  const html=`<div class="section-header">
+    <div class="proj-icon ${iconCls}" style="width:40px;height:40px;border-radius:10px">${ic(p.icon)}</div>
+    <div><div class="section-title">${p.name}</div><div style="font-size:.78rem;color:var(--muted)">${p.org} · Inversión: $${p.budget.toLocaleString('es-MX')} MXN · Valor social neto P50: $${Number(p.net_p50).toLocaleString('es-MX')} MXN</div></div>
+  </div>
+  <div class="inner-tabs">
+    <button class="inner-tab active" onclick="switchTab('mc','${pid}')">Distribución MC</button>
+    <button class="inner-tab" onclick="switchTab('proxy','${pid}')">Transparencia de proxys</button>
+    <button class="inner-tab" onclick="switchTab('sens','${pid}')">Análisis de sensibilidad</button>
+    <button class="inner-tab" onclick="switchTab('tree','${pid}')">Árbol de decisión</button>
+  </div>
+  <div id="tab-mc" class="inner-content active">
+    <div class="scenario-row">
+      <div class="scenario pessimist"><div class="scenario-label">P10 — Pesimista</div><div class="scenario-val">${p10}x</div></div>
+      <div class="scenario base"><div class="scenario-label">P50 — Base</div><div class="scenario-val">${p50}x</div></div>
+      <div class="scenario optimist"><div class="scenario-label">P90 — Optimista</div><div class="scenario-val">${p90}x</div></div>
+    </div>
+    <div class="sens-note ${noteClass}">Con 80% de confianza, el SROI se encuentra entre <strong>${p10}x</strong> y <strong>${p90}x</strong>, con valor central de <strong>${p50}x</strong>. 10,000 iteraciones Monte Carlo con distribuciones triangulares.</div>
+    <div class="chart-card"><div class="chart-label">Simulación Monte Carlo — 10,000 iteraciones</div><div class="chart-title">Distribución del SROI</div><div style="position:relative;height:260px"><canvas id="chart-hist"></canvas></div></div>
+  </div>
+  <div id="tab-proxy" class="inner-content">
+    <div class="chart-card"><div class="chart-label">Transparencia de supuestos</div><div class="chart-title">Tabla de proxys y fuentes</div>
+      <div class="proxy-table-wrap"><table class="proxy-table"><thead><tr><th>Outcome</th><th>Ruta</th><th>Mínimo</th><th>Moda</th><th>Máximo</th><th>Fuentes y ajustes</th></tr></thead><tbody>${proxyRows}</tbody></table></div>
+    </div>
+  </div>
+  <div id="tab-sens" class="inner-content">
+    <div class="chart-card"><div class="chart-label">Correlación de Spearman</div><div class="chart-title">¿Qué parámetro mueve más el SROI?</div><div style="margin-bottom:.75rem;font-size:.8rem;color:var(--muted)">Correlación de rango entre cada proxy y el SROI resultante.</div>${corrBars}</div>
+    <div class="chart-card"><div class="chart-label">Distribución por escenario</div><div class="chart-title">Comparativo P10 / P50 / P90</div><div style="position:relative;height:200px"><canvas id="chart-scenario"></canvas></div></div>
+  </div>
+  <div id="tab-tree" class="inner-content">
+    <div class="chart-card"><div class="chart-label">Árbol de decisión aplicado</div><div class="chart-title">Ruta de proxy por outcome</div>${treeRows}</div>
+  </div>`;
+  document.getElementById('proj-detail-content').innerHTML=html;
+  document.getElementById('proj-list-view').style.display='none';
+  document.getElementById('proj-detail-view').style.display='block';
+  setTimeout(()=>renderDetailCharts(p),150);
+}
+
+function renderDetailCharts(p){
+  const h=p.histogram,sc=p.scenarios;
+  dC('chart-hist');
+  const hc=document.getElementById('chart-hist');
+  if(hc) rC('chart-hist',new Chart(hc,{
+    type:'bar',data:{labels:h.labels,datasets:[{label:'Frecuencia',data:h.data,backgroundColor:h.colors,borderWidth:0,borderRadius:2}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{title:v=>`SROI ≈ ${parseFloat(v[0].label).toFixed(4)}x`,label:v=>`Frecuencia: ${v.raw}`}}},
+      scales:{x:{ticks:{maxTicksLimit:8,font:{size:10}},grid:{display:false}},y:{ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}}}}
+  }));
+  dC('chart-scenario');
+  const sc2=document.getElementById('chart-scenario');
+  if(sc2) rC('chart-scenario',new Chart(sc2,{
+    type:'bar',data:{labels:['P10 — Pesimista','P50 — Base','P90 — Optimista'],datasets:[{label:'SROI',data:[sc.p10,sc.p50,sc.p90],backgroundColor:['#E24B4A','#2D5F8A','#3B6D11'],borderWidth:0,borderRadius:6}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:v=>`SROI: ${v.raw.toFixed(4)}x`}}},
+      scales:{x:{ticks:{font:{size:10},callback:v=>`${v}x`},grid:{color:'rgba(0,0,0,0.05)'}},y:{ticks:{font:{size:10}},grid:{display:false}}}}
+  }));
+}
+
+function switchTab(tab,pid){
+  const tabs=['mc','proxy','sens','tree'];
+  tabs.forEach(t=>document.getElementById('tab-'+t)?.classList.remove('active'));
+  document.querySelectorAll('.inner-tab').forEach((el,i)=>{el.classList.remove('active');if(tabs[i]===tab)el.classList.add('active');});
+  document.getElementById('tab-'+tab)?.classList.add('active');
+  if(tab==='mc'||tab==='sens'){const p=ALL_PROJECTS.find(x=>x.id===pid);if(p)setTimeout(()=>renderDetailCharts(p),100);}
+}
+
+// ══════════════════════════════════════════════════════════════
+// PARETO ENGINE (Escalabilidad)
+// ══════════════════════════════════════════════════════════════
+let paretoSort={key:'sroi',asc:false};
+function normPareto(projects){
+  const maxSroi=Math.max(...projects.map(p=>p.sroi));
+  return projects.map(p=>{
+    const sroi_n=p.sroi/maxSroi;
+    const urg_n=p.s[0]/5;
+    const evid_n=p.s[1]/5;
+    const compl_n=(6-p.s[2])/5;
+    const riesgo_n=(6-p.s[3])/5;
+    const med_n=p.s[4]/5;
+    return{...p,sroi_n,urg_n,evid_n,compl_n,riesgo_n,med_n,
+      vec:[sroi_n,urg_n,evid_n,compl_n,riesgo_n,med_n]};
+  });
+}
+function computePareto(normed){
+  return normed.map((a,i)=>{
+    let dominatedBy=[];
+    normed.forEach((b,j)=>{
+      if(i===j)return;
+      const bDomA=b.vec.every((bv,k)=>bv>=a.vec[k])&&b.vec.some((bv,k)=>bv>a.vec[k]);
+      if(bDomA)dominatedBy.push(b.name);
+    });
+    const isDominator=normed.some((b,j)=>j!==i&&a.vec.every((av,k)=>av>=b.vec[k])&&a.vec.some((av,k)=>av>b.vec[k]));
+    const result=dominatedBy.length===0?'front':isDominator?'mid':'dom';
+    return{...a,dominatedBy,result};
+  });
+}
+function runPareto(){
+  const normed=normPareto(PARETO_PROJECTS);
+  const results=computePareto(normed);
+  renderParetoKPIs(results);
+  renderParetoTable(results);
+  renderCriteriaEditor();
+}
+function renderParetoKPIs(results){
+  const front=results.filter(r=>r.result==='front');
+  const mid=results.filter(r=>r.result==='mid');
+  const dom=results.filter(r=>r.result==='dom');
+  const total=PARETO_PROJECTS.reduce((s,p)=>s+p.budget,0);
+  const frontBudget=front.reduce((s,p)=>s+p.budget,0);
+  document.getElementById('kpi-row').innerHTML=`
+    <div class="kpi green"><div class="kpi-label">Frontera Pareto</div><div class="kpi-val">${front.length} proyectos</div></div>
+    <div class="kpi amb"><div class="kpi-label">Zona media</div><div class="kpi-val">${mid.length} proyectos</div></div>
+    <div class="kpi red"><div class="kpi-label">Dominados</div><div class="kpi-val">${dom.length} proyectos</div></div>
+    <div class="kpi blue"><div class="kpi-label">Presupuesto en frontera</div><div class="kpi-val">${(frontBudget/total*100).toFixed(0)}%</div></div>
+    <div class="kpi blue"><div class="kpi-label">Total portafolio</div><div class="kpi-val">$${(total/1e6).toFixed(2)}M MXN</div></div>`;
+  document.getElementById('note-pareto').innerHTML=`<strong>Metodología Pareto (6 criterios):</strong> SROI P50, Urgencia social, Calidad de evidencia, Complejidad (invertida), Riesgo (invertido) y Potencial de medición — todos normalizados 0–1. Un proyecto es <strong>dominado</strong> si existe otro igual o mejor en todo y estrictamente mejor en al menos uno. <strong>Sin ponderaciones.</strong>`;
+}
+function renderParetoTable(results){
+  let rows=[...results];
+  if(paretoSort.key==='sroi') rows.sort((a,b)=>paretoSort.asc?a.sroi-b.sroi:b.sroi-a.sroi);
+  const catBg={'Educación':'#E6F1FB','Ambiente':'#EAF3DE','Salud':'#FAEEDA','Emprendimiento':'#EEEDFE'};
+  const catTx={'Educación':'#0C447C','Ambiente':'#27500A','Salud':'#633806','Emprendimiento':'#3C3489'};
+  function bar(val,cls){return `<div class="bar-wrap"><div class="bar-bg"><div class="bar-fill ${cls}" style="width:${(val*100).toFixed(0)}%"></div></div><span style="font-size:.7rem;color:var(--muted)">${(val*5).toFixed(1)}</span></div>`;}
+  document.getElementById('pareto-body').innerHTML=rows.map(p=>{
+    const rc=p.result==='front'?'row-front':p.result==='mid'?'row-mid':'row-dom';
+    const badge=p.result==='front'?'<span class="pbadge front">Frontera Pareto</span>':p.result==='mid'?'<span class="pbadge mid">Zona media</span>':'<span class="pbadge dom">Dominado</span>';
+    const domBy=p.dominatedBy.length?p.dominatedBy.map(n=>n.split(' ').slice(0,2).join(' ')).join(', '):'—';
+    const avgScore=(p.vec.reduce((s,v)=>s+v,0)/6);
+    return `<tr class="${rc}">
+      <td><strong style="font-size:.79rem">${p.name}</strong></td>
+      <td><span style="background:${catBg[p.cat]||'#eee'};color:${catTx[p.cat]||'#333'};font-size:.67rem;font-weight:600;padding:2px 6px;border-radius:10px">${p.cat}</span></td>
+      <td><strong>${p.sroi.toFixed(4)}x</strong></td>
+      <td>${bar(p.urg_n,'teal')}</td>
+      <td>${bar(p.evid_n,'teal')}</td>
+      <td>${bar(p.compl_n,'amb')}</td>
+      <td>${bar(p.riesgo_n,'amb')}</td>
+      <td>${bar(p.med_n,'teal')}</td>
+      <td>${bar(avgScore,'blue')}</td>
+      <td style="font-size:.7rem;color:var(--muted);max-width:140px">${domBy}</td>
+      <td>${badge}</td>
+    </tr>`;
+  }).join('');
+}
+function sortParetoTable(key){
+  if(paretoSort.key===key)paretoSort.asc=!paretoSort.asc;else{paretoSort.key=key;paretoSort.asc=false;}
+  const normed=normPareto(PARETO_PROJECTS);
+  const results=computePareto(normed);
+  renderParetoTable(results);
+}
+
+// CRITERIA EDITOR (Escalabilidad)
+const EDIT_CRIT=[
+  {name:'Urgencia social',idx:0,inv:false,desc:'1=Necesidad estable, bien atendida · 3=Necesidad moderada · 5=Crisis activa, daño irreversible inminente'},
+  {name:'Calidad de evidencia',idx:1,inv:false,desc:'1=Solo estimaciones internas · 3=Evidencia secundaria sólida (CONEVAL, INEGI) · 5=RCT o cuasi-experimental propio'},
+  {name:'Complejidad (invertida)',idx:2,inv:true,desc:'1=Un actor, proceso simple [MUY FAVORABLE] · 3=3–5 actores, algunos permisos · 5=Múltiples actores críticos [MUY DESFAVORABLE]'},
+  {name:'Riesgo (invertido)',idx:3,inv:true,desc:'1=Operador probado, SROI P10 > 1x [MUY FAVORABLE] · 3=Riesgo moderado · 5=Operador nuevo, dependencia externa [MUY DESFAVORABLE]'},
+  {name:'Potencial de medición',idx:4,inv:false,desc:'1=Resultados intangibles, sin acceso · 3=Indicadores cuantificables · 5=Datos objetivos, seguimiento longitudinal, contrafactual claro'},
+];
+function renderCriteriaEditor(){
+  document.getElementById('crit-grid').innerHTML=EDIT_CRIT.map(crit=>`
+    <div class="crit-card">
+      <div class="crit-name">${crit.name}${crit.inv?' ⟵ escala invertida':''}</div>
+      <div class="crit-desc">${crit.desc}</div>
+      ${PARETO_PROJECTS.map((p,pi)=>`
+        <div class="proj-score-row">
+          <span style="max-width:135px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.75rem" title="${p.name}">${p.name.split(' ').slice(0,3).join(' ')}</span>
+          <div class="score-btns">${[1,2,3,4,5].map(v=>`<button class="score-btn ${p.s[crit.idx]===v?'active':''}" onclick="setScore(${pi},${crit.idx},${v})">${v}</button>`).join('')}</div>
+        </div>`).join('')}
+    </div>`).join('');
+}
+function setScore(pi,ci,val){PARETO_PROJECTS[pi].s[ci]=val;runPareto();}
+
+// ══════════════════════════════════════════════════════════════
+// ASSESSMENT
+// ══════════════════════════════════════════════════════════════
+const ASSESS_DEF=[
+{key:0,name:'Urgencia social',inv:false,desc:'¿Qué tan apremiante es la necesidad que atiende el proyecto?',
+ questions:[
+  {q:'a. ¿La problemática está activamente empeorando, estabilizada o en retroceso?',opts:['En retroceso (mejora sola)','Estabilizada','Empeorando activamente']},
+  {q:'b. ¿Qué tan vulnerable es la población? ¿Riesgo de daño irreversible si no se interviene?',opts:['Baja vulnerabilidad, sin riesgo inmediato','Vulnerabilidad media, riesgo moderado','Alta vulnerabilidad, riesgo de daño irreversible']},
+  {q:'c. ¿Hay una ventana de oportunidad que se cerraría si no se actúa ahora?',opts:['No hay ventana especial','Ventana abierta por tiempo limitado','Ventana crítica que se cierra pronto']},
+  {q:'d. ¿Otros actores ya están respondiendo con cobertura suficiente?',opts:['Cobertura amplia por otros actores','Cobertura parcial existente','Sin cobertura alternativa']},
+ ],
+ logic:(ans)=>{const s=ans.reduce((a,b)=>a+b,0);return s<=5?1:s<=7?2:s<=9?3:s<=11?4:5;}},
+{key:1,name:'Calidad de evidencia',inv:false,desc:'¿Qué tan sólido es el respaldo empírico de que esta intervención produce los resultados declarados?',
+ questions:[
+  {q:'a. ¿Existe literatura académica que demuestre la efectividad de este tipo de intervención?',opts:['No existe evidencia externa','Evidencia secundaria limitada','Literatura académica robusta o evaluaciones independientes']},
+  {q:'b. ¿Los proxys se basan en fuentes primarias verificables o en estimaciones internas?',opts:['Estimaciones internas sin verificación','Fuentes secundarias verificables','Fuentes primarias: CONEVAL, INEGI, publicaciones indexadas']},
+  {q:'c. ¿Se han realizado evaluaciones previas con grupo de control?',opts:['Sin evaluaciones previas','Evaluación previa sin grupo de control','RCT o cuasi-experimental propio']},
+  {q:'d. ¿Cuán amplio es el rango P10–P90 en el SROI Monte Carlo?',opts:['Rango muy amplio (>2x diferencia P10-P90)','Rango moderado','Rango estrecho, supuestos auditados']},
+ ],
+ logic:(ans)=>{const s=ans.reduce((a,b)=>a+b,0);return s<=5?1:s<=7?2:s<=9?3:s<=11?4:5;}},
+{key:2,name:'Complejidad (escala invertida)',inv:true,desc:'¿Qué tan difícil es ejecutar el proyecto? Escala invertida: 1=favorable.',
+ questions:[
+  {q:'a. ¿Cuántos actores distintos deben coordinarse?',opts:['Un solo actor o proceso simple','3–5 actores con coordinación moderada','Múltiples actores críticos, coordinación compleja']},
+  {q:'b. ¿Depende de permisos o habilitaciones regulatorias difíciles?',opts:['Sin permisos especiales requeridos','Algunos permisos o acuerdos moderados','Regulación compleja, permisos difíciles de obtener']},
+  {q:'c. ¿Requiere capacidades técnicas altamente especializadas?',opts:['Sin especialización técnica requerida','Especialización moderada, disponible','Alta especialización, escasa y costosa']},
+  {q:'d. ¿Existen interdependencias críticas que si fallan comprometen el resultado?',opts:['Sin interdependencias críticas','Algunas interdependencias manejables','Interdependencias críticas']},
+ ],
+ logic:(ans)=>{const s=ans.reduce((a,b)=>a+b,0);return s<=5?1:s<=7?2:s<=9?3:s<=11?4:5;}},
+{key:3,name:'Riesgo (escala invertida)',inv:true,desc:'¿Qué probabilidad hay de que no entregue los resultados esperados? Escala invertida: 1=favorable.',
+ questions:[
+  {q:'a. ¿Cuál es el historial de ejecución del operador?',opts:['Operador probado con historial sólido','Historial parcial o en desarrollo','Operador nuevo o sin historial relevante']},
+  {q:'b. ¿Depende de factores externos incontrolables?',opts:['Contexto estable, bajo control del equipo','Algunos factores externos moderados','Alta dependencia de factores externos incontrolables']},
+  {q:'c. ¿Existe riesgo reputacional para Xignux si el proyecto fracasa?',opts:['Sin riesgo reputacional relevante','Riesgo reputacional moderado y manejable','Alto riesgo reputacional potencial']},
+  {q:'d. ¿El P10–P90 incluye escenarios donde el impacto neto es negativo?',opts:['SROI P10 > 1x, varianza baja','Riesgo moderado, P10 positivo','Alta varianza o escenarios pesimistas negativos']},
+ ],
+ logic:(ans)=>{const s=ans.reduce((a,b)=>a+b,0);return s<=5?1:s<=7?2:s<=9?3:s<=11?4:5;}},
+{key:4,name:'Potencial de medición',inv:false,desc:'¿Qué tan factible es recolectar datos robustos para verificar el impacto?',
+ questions:[
+  {q:'a. ¿Los resultados son cuantificables con indicadores objetivos o dependen de autorreporte?',opts:['Dependen de autorreporte subjetivo','Indicadores mixtos','Indicadores totalmente objetivos y verificables']},
+  {q:'b. ¿Existe acceso a los beneficiarios para seguimiento longitudinal?',opts:['Sin acceso para seguimiento longitudinal','Acceso parcial o difícil de mantener','Acceso claro y sostenido']},
+  {q:'c. ¿El costo de medir el impacto es proporcional al presupuesto (≤10%)?',opts:['Monitoreo costaría >10% del presupuesto','Costo de monitoreo en el límite (8–12%)','Monitoreo claramente ≤10%']},
+  {q:'d. ¿Es posible establecer un contrafactual razonable?',opts:['Sin contrafactual viable','Contrafactual parcial o aproximado','Contrafactual claro']},
+ ],
+ logic:(ans)=>{const s=ans.reduce((a,b)=>a+b,0);return s<=5?1:s<=7?2:s<=9?3:s<=11?4:5;}},
+];
+let assessAnswers={};
+let assessCurrProj=null;
+function onAssessProjChange(){
+  const sel=document.getElementById('assess-proj-sel');
+  assessCurrProj=sel.value;
+  if(!assessAnswers[assessCurrProj]) assessAnswers[assessCurrProj]={};
+  renderAssessCriteria();
+  updateAssessProgress();
+  updateAssessSummary();
+}
+function resetAssessment(){
+  if(!assessCurrProj)return;
+  assessAnswers[assessCurrProj]={};
+  renderAssessCriteria();
+  updateAssessProgress();
+  updateAssessSummary();
+  document.getElementById('assess-apply-btn').disabled=true;
+}
+function renderAssessCriteria(){
+  if(!assessCurrProj)return;
+  const container=document.getElementById('assess-criteria-container');
+  container.innerHTML=ASSESS_DEF.map(crit=>{
+    const answers=assessAnswers[assessCurrProj][crit.key]||[];
+    const completed=answers.length===4&&answers.every(a=>a>0);
+    const score=completed?crit.logic(answers):null;
+    const resultClass=score===null?'':crit.inv?(['','ri1','ri2','ri3','ri4','ri5'][score]||''):(['','r1','r2','r3','r4','r5'][score]||'');
+    const scoreLabel=score===null?'':'Score: '+score+'/5'+(crit.inv?' (invertido)':'');
+    return `<div class="crit-section" id="assess-crit-${crit.key}">
+      <div class="crit-sec-header">
+        <div class="crit-sec-title">${crit.name}${crit.inv?' ⟵ escala invertida':''}</div>
+        ${completed?`<div class="crit-sec-badge">${scoreLabel}</div>`:'<div class="crit-sec-badge" style="background:#f5f5f5;color:#aaa">Pendiente</div>'}
+      </div>
+      <div class="crit-sec-desc">${crit.desc}</div>
+      <div class="q-list">${crit.questions.map((q,qi)=>{
+        const selAns=answers[qi]||0;
+        return `<div class="q-item">
+          <div class="q-label">Pregunta ${qi+1}</div>
+          <div class="q-text">${q.q}</div>
+          <div class="q-options">${q.opts.map((opt,oi)=>`<button class="q-opt ${selAns===(oi+1)?'sel':''}" onclick="setAssessAnswer(${crit.key},${qi},${oi+1})">${opt}</button>`).join('')}</div>
+        </div>`;
+      }).join('')}</div>
+      ${completed?`<div class="crit-result ${resultClass}"><strong>${crit.name}:</strong> ${scoreLabel} — ${getCritLabel(crit,score)}</div>`:''}
+    </div>`;
+  }).join('');
+}
+function getCritLabel(crit,score){
+  if(!crit.inv){const l=['','Muy bajo','Bajo-medio','Medio','Medio-alto','Muy alto'];return l[score]||'';}
+  const l=['','Muy favorable','Favorable','Moderado','Desfavorable','Muy desfavorable'];return l[score]||'';
+}
+function setAssessAnswer(critKey,qIdx,val){
+  if(!assessCurrProj)return;
+  if(!assessAnswers[assessCurrProj])assessAnswers[assessCurrProj]={};
+  if(!assessAnswers[assessCurrProj][critKey])assessAnswers[assessCurrProj][critKey]=[];
+  assessAnswers[assessCurrProj][critKey][qIdx]=val;
+  renderAssessCriteria();
+  updateAssessProgress();
+  updateAssessSummary();
+}
+function updateAssessProgress(){
+  if(!assessCurrProj)return;
+  const answers=assessAnswers[assessCurrProj]||{};
+  const done=ASSESS_DEF.filter(c=>{const a=answers[c.key]||[];return a.length===4&&a.every(x=>x>0);}).length;
+  const total=ASSESS_DEF.length;
+  document.getElementById('assess-prog-text').textContent=`${done} de ${total} criterios completados`;
+  document.getElementById('assess-prog-bar').style.width=`${(done/total*100).toFixed(0)}%`;
+  document.getElementById('assess-apply-btn').disabled=(done<total);
+  document.getElementById('assess-summary').style.display=done>0?'block':'none';
+}
+function updateAssessSummary(){
+  if(!assessCurrProj)return;
+  const answers=assessAnswers[assessCurrProj]||{};
+  const proj=PARETO_PROJECTS.find(p=>p.id===assessCurrProj);
+  if(!proj)return;
+  document.getElementById('assess-proj-name-sum').textContent=proj.name;
+  document.getElementById('assess-sum-grid').innerHTML=ASSESS_DEF.map(crit=>{
+    const a=answers[crit.key]||[];
+    const done=a.length===4&&a.every(x=>x>0);
+    const score=done?crit.logic(a):null;
+    const valClass=score===null?'':(crit.inv?(['','sinv1','sinv2','sinv3','sinv4','sinv5'][score]||''):(['','s1','s2','s3','s4','s5'][score]||''));
+    return `<div class="assess-box"><div class="assess-box-name">${crit.name}</div><div class="assess-box-val ${valClass}">${score===null?'—':score+'/5'}</div></div>`;
+  }).join('');
+}
+function applyAssessment(){
+  if(!assessCurrProj)return;
+  const answers=assessAnswers[assessCurrProj]||{};
+  const pi=PARETO_PROJECTS.findIndex(p=>p.id===assessCurrProj);
+  if(pi<0)return;
+  ASSESS_DEF.forEach(crit=>{
+    const a=answers[crit.key]||[];
+    if(a.length===4&&a.every(x=>x>0)) PARETO_PROJECTS[pi].s[crit.key]=crit.logic(a);
+  });
+  runPareto();
+  showParetoTab('result',document.querySelector('.pareto-tab'));
+  setTimeout(()=>alert(`✅ Calificaciones aplicadas al Análisis Escalabilidad para:\n${PARETO_PROJECTS[pi].name}`),100);
+}
+
+// ══════════════════════════════════════════════════════════════
+// BENEFICIO ENGINE
+// ══════════════════════════════════════════════════════════════
+// dims: [reputacion, retencion, talento, innovacion, relaciones]
+const BEN_CRIT_DEFS=[
+  {name:'Reputación y Marca Empleadora',idx:0,desc:'Cobertura mediática, visibilidad para talento y percepción de responsabilidad ante stakeholders.'},
+  {name:'Retención y Compromiso del Empleado',idx:1,desc:'Participación directa, alineación con valores y orgullo de pertenencia entre los energizadores.'},
+  {name:'Atracción y Desarrollo de Talento',idx:2,desc:'Contacto con candidatos, desarrollo de habilidades y pipeline de reclutamiento.'},
+  {name:'Innovación y Aprendizaje Organizacional',idx:3,desc:'Contacto con ideas innovadoras y generación de conocimiento transferible al negocio.'},
+  {name:'Relaciones y Ecosistema Estratégico',idx:4,desc:'Fortalecimiento de relaciones con universidades, gobierno, OSC y posicionamiento en RSE.'},
+];
+let benSort={key:'score',asc:false};
+function runBenPareto(){
+  const sorted=[...BEN_PROJECTS].sort((a,b)=>benSort.asc?a.score-b.score:b.score-a.score);
+  renderBenTable(sorted);
+  renderBenCriteriaEditor();
+  renderBenBarChart(sorted);
+}
+function renderBenTable(rows){
+  const catBg={'Educación':'#E6F1FB','Ambiente':'#EAF3DE','Salud':'#FAEEDA','Emprendimiento':'#EEEDFE'};
+  const catTx={'Educación':'#0C447C','Ambiente':'#27500A','Salud':'#633806','Emprendimiento':'#3C3489'};
+  function bar(val){const pct=(val/5*100).toFixed(0);return `<div class="bar-wrap"><div class="bar-bg"><div class="bar-fill teal" style="width:${pct}%"></div></div><span style="font-size:.7rem;color:var(--muted)">${val.toFixed(2)}</span></div>`;}
+  document.getElementById('ben-pareto-body').innerHTML=rows.map(p=>`<tr>
+      <td><strong style="font-size:.79rem">${p.name}</strong></td>
+      <td><span style="background:${catBg[p.cat]||'#eee'};color:${catTx[p.cat]||'#333'};font-size:.67rem;font-weight:600;padding:2px 6px;border-radius:10px">${p.cat}</span></td>
+      ${p.dims.map(d=>`<td>${bar(d)}</td>`).join('')}
+      <td>${bar(p.score)}</td>
+    </tr>`).join('');
+}
+function sortBenTable(key){
+  if(benSort.key===key)benSort.asc=!benSort.asc;else{benSort.key=key;benSort.asc=false;}
+  runBenPareto();
+}
+function renderBenCriteriaEditor(){
+  document.getElementById('ben-crit-grid').innerHTML=BEN_CRIT_DEFS.map(crit=>`
+    <div class="crit-card">
+      <div class="crit-name">${crit.name}</div>
+      <div class="crit-desc">${crit.desc}</div>
+      ${BEN_PROJECTS.map((p,pi)=>`
+        <div class="proj-score-row">
+          <span style="max-width:135px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.75rem" title="${p.name}">${p.name.split(' ').slice(0,3).join(' ')}</span>
+          <div class="score-btns">${[1,2,3,4,5].map(v=>`<button class="score-btn ${Math.round(p.dims[crit.idx])===v?'active':''}" onclick="setBenScore(${pi},${crit.idx},${v})">${v}</button>`).join('')}</div>
+        </div>`).join('')}
+    </div>`).join('');
+}
+function setBenScore(pi,di,val){
+  BEN_PROJECTS[pi].dims[di]=val;
+  BEN_PROJECTS[pi].score=BEN_PROJECTS[pi].dims.reduce((s,d)=>s+d,0)/BEN_PROJECTS[pi].dims.length;
+  runBenPareto();
+}
+function renderBenBarChart(sorted){
+  dC('chart-beneficio-bar');
+  const ctx=document.getElementById('chart-beneficio-bar');
+  if(!ctx)return;
+  const colors={'Educación':'#1B3A5C','Ambiente':'#1a5c3a','Salud':'#7B2D8B','Emprendimiento':'#8B4513'};
+  rC('chart-beneficio-bar',new Chart(ctx,{
+    type:'bar',
+    data:{labels:sorted.map(p=>p.name.length>25?p.name.slice(0,23)+'…':p.name),
+      datasets:[{label:'Score Beneficio',data:sorted.map(p=>p.score),backgroundColor:sorted.map(p=>colors[p.cat]||'#888'),borderWidth:0,borderRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:v=>`Score: ${v.raw.toFixed(3)}/5`}}},
+      scales:{x:{ticks:{font:{size:9},maxRotation:40,minRotation:30},grid:{display:false}},
+        y:{min:0,max:5,ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'},title:{display:true,text:'Score Beneficio (1–5)',font:{size:11},color:'#888'}}}}
+  }));
+}
+function showBenTab(name,btn){
+  document.querySelectorAll('#page-beneficio .pareto-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('#page-beneficio .pareto-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('btab-'+name).classList.add('active');
+  if(btn) btn.classList.add('active');
+  if(name==='result') setTimeout(()=>runBenPareto(),100);
+  if(name==='assessment'){
+    const sel=document.getElementById('ben-assess-proj-sel');
+    if(!sel.innerHTML.includes('option value="p0"')){
+      sel.innerHTML='<option value="">— Selecciona un proyecto —</option>'+
+        BEN_PROJECTS.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
+    }
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+// BENEFICIO ASSESSMENT ENGINE
+// ══════════════════════════════════════════════════════════════
+// 14 questions across 5 dimensions matching the evaluation document
+const BEN_ASSESS_DEF=[
+  {key:0,name:'Reputación y Marca Empleadora',desc:'Cobertura mediática, visibilidad para talento universitario y percepción como empresa responsable.',
+   questions:[
+    {q:'¿En qué medida el proyecto genera cobertura mediática positiva (prensa, redes, menciones institucionales) para Xignux?'},
+    {q:'¿Qué tan visible es la marca Xignux para talento universitario potencial gracias a este proyecto?'},
+    {q:'¿El proyecto fortalece la percepción de Xignux como empresa responsable ante clientes, socios e inversionistas?'},
+   ],
+   defaults:{p0:[5,5,5],p1:[3,4,3],e0:[4,5,4],e1:[5,4,5],p2:[4,4,4],h1:[3,2,3],e3:[3,2,4],e2:[2,1,3],h0:[4,3,3],v0:[4,2,5],v1:[4,1,4],v4:[3,1,3],v2:[3,1,3],v3:[3,2,3],h2:[2,1,3]},
+   // Q1=cobertura mediática, Q2=visibilidad talento, Q3=percepción responsable
+   logic:(ans)=>ans.reduce((a,b)=>a+b,0)/ans.length
+  },
+  {key:1,name:'Retención y Compromiso del Empleado',desc:'Participación directa, alineación con valores y orgullo de pertenencia entre los energizadores.',
+   questions:[
+    {q:'¿El proyecto ofrece oportunidades de participación directa para los empleados (voluntariado, mentoring, juzgado)?'},
+    {q:'¿Qué tan alineado está el proyecto con los valores y propósito que los empleados expresan como importantes?'},
+    {q:'¿El proyecto genera orgullo de pertenencia entre los energizadores de Xignux?'},
+   ],
+   defaults:{p0:[4,5,5],p1:[3,4,4],e0:[3,5,4],e1:[2,4,4],p2:[3,4,4],h1:[4,3,4],e3:[2,3,3],e2:[4,4,5],h0:[4,3,4],v0:[4,5,5],v1:[4,4,4],v4:[4,3,4],v2:[3,3,4],v3:[4,3,4],h2:[3,3,3]},
+   logic:(ans)=>ans.reduce((a,b)=>a+b,0)/ans.length
+  },
+  {key:2,name:'Atracción y Desarrollo de Talento',desc:'Contacto directo con candidatos de alto potencial, desarrollo de habilidades y pipeline de reclutamiento.',
+   questions:[
+    {q:'¿El proyecto genera contacto directo con estudiantes o egresados de alto potencial como futuros candidatos?'},
+    {q:'¿Ofrece oportunidades de desarrollo de habilidades (liderazgo, innovación, trabajo en equipo) para empleados involucrados?'},
+    {q:'¿El proyecto puede convertirse en pipeline real de reclutamiento universitario para Xignux?'},
+   ],
+   defaults:{p0:[5,4,5],p1:[4,3,4],e0:[5,4,5],e1:[4,3,4],p2:[4,4,4],h1:[2,3,2],e3:[1,2,1],e2:[1,2,1],h0:[2,2,2],v0:[2,3,2],v1:[1,2,1],v4:[1,2,1],v2:[1,2,1],v3:[2,3,2],h2:[1,1,1]},
+   logic:(ans)=>ans.reduce((a,b)=>a+b,0)/ans.length
+  },
+  {key:3,name:'Innovación y Aprendizaje Organizacional',desc:'Contacto con ideas y tecnologías innovadoras y generación de conocimiento transferible al negocio.',
+   questions:[
+    {q:'¿El proyecto pone a Xignux en contacto con ideas, tecnologías o enfoques innovadores aplicables al negocio?'},
+    {q:'¿Genera conocimiento o aprendizajes transferibles a la operación o estrategia de la empresa?'},
+   ],
+   defaults:{p0:[5,5],p1:[4,3],e0:[4,4],e1:[5,4],p2:[5,5],h1:[3,2],e3:[3,3],e2:[2,2],h0:[2,2],v0:[4,4],v1:[2,2],v4:[2,2],v2:[3,3],v3:[2,2],h2:[1,2]},
+   logic:(ans)=>ans.reduce((a,b)=>a+b,0)/ans.length
+  },
+  {key:4,name:'Relaciones y Ecosistema Estratégico',desc:'Fortalecimiento de relaciones institucionales, apertura de alianzas y posicionamiento en la agenda de RSE.',
+   questions:[
+    {q:'¿El proyecto fortalece relaciones con universidades, gobierno, OSC u otras empresas relevantes para el negocio?'},
+    {q:'¿Abre oportunidades de colaboración, coinversión o alianzas estratégicas a futuro?'},
+    {q:'¿El proyecto mejora el posicionamiento de Xignux dentro de la agenda de sustentabilidad y RSE del sector?'},
+   ],
+   defaults:{p0:[5,4,5],p1:[4,4,3],e0:[5,4,4],e1:[5,4,5],p2:[5,4,5],h1:[3,2,3],e3:[5,5,5],e2:[2,2,3],h0:[3,3,4],v0:[4,4,5],v1:[3,4,5],v4:[3,3,4],v2:[4,3,4],v3:[4,3,3],h2:[2,2,3]},
+   logic:(ans)=>ans.reduce((a,b)=>a+b,0)/ans.length
+  },
+];
+let benAssessAnswers={};
+let benAssessCurrProj=null;
+
+function onBenAssessProjChange(){
+  const sel=document.getElementById('ben-assess-proj-sel');
+  benAssessCurrProj=sel.value;
+  if(!benAssessCurrProj)return;
+  if(!benAssessAnswers[benAssessCurrProj]){
+    // Pre-fill with defaults from the evaluation document
+    benAssessAnswers[benAssessCurrProj]={};
+    BEN_ASSESS_DEF.forEach(dim=>{
+      const defs=dim.defaults[benAssessCurrProj];
+      if(defs) benAssessAnswers[benAssessCurrProj][dim.key]=defs.slice();
+    });
+  }
+  renderBenAssessCriteria();
+  updateBenAssessProgress();
+  updateBenAssessSummary();
+}
+function resetBenAssessment(){
+  if(!benAssessCurrProj)return;
+  delete benAssessAnswers[benAssessCurrProj];
+  onBenAssessProjChange();
+}
+function renderBenAssessCriteria(){
+  if(!benAssessCurrProj)return;
+  const container=document.getElementById('ben-assess-criteria-container');
+  container.innerHTML=BEN_ASSESS_DEF.map(dim=>{
+    const answers=benAssessAnswers[benAssessCurrProj]?.[dim.key]||[];
+    const completed=answers.length===dim.questions.length&&answers.every(a=>a>0);
+    const score=completed?dim.logic(answers):null;
+    const scoreLabel=score===null?'':('Score: '+score.toFixed(2)+'/5');
+    return `<div class="crit-section" id="ben-assess-dim-${dim.key}">
+      <div class="crit-sec-header">
+        <div class="crit-sec-title">${dim.name}</div>
+        ${completed?`<div class="crit-sec-badge">${scoreLabel}</div>`:'<div class="crit-sec-badge" style="background:#f5f5f5;color:#aaa">Pendiente</div>'}
+      </div>
+      <div class="crit-sec-desc">${dim.desc}</div>
+      <div class="q-list">${dim.questions.map((q,qi)=>{
+        const selVal=answers[qi]||0;
+        return `<div class="q-item">
+          <div class="q-label">Pregunta ${qi+1}</div>
+          <div class="q-text">${q.q}</div>
+          <div class="q-options">${[1,2,3,4,5].map(v=>`<button class="q-opt ${selVal===v?'sel':''}" onclick="setBenAssessAnswer(${dim.key},${qi},${v})">${v} — ${['Muy bajo','Bajo','Medio','Alto','Muy alto'][v-1]}</button>`).join('')}</div>
+        </div>`;
+      }).join('')}</div>
+      ${completed?`<div class="crit-result r${Math.round(score)}"><strong>${dim.name}:</strong> ${scoreLabel}</div>`:''}
+    </div>`;
+  }).join('');
+}
+function setBenAssessAnswer(dimKey,qIdx,val){
+  if(!benAssessCurrProj)return;
+  if(!benAssessAnswers[benAssessCurrProj])benAssessAnswers[benAssessCurrProj]={};
+  if(!benAssessAnswers[benAssessCurrProj][dimKey])benAssessAnswers[benAssessCurrProj][dimKey]=[];
+  benAssessAnswers[benAssessCurrProj][dimKey][qIdx]=val;
+  renderBenAssessCriteria();
+  updateBenAssessProgress();
+  updateBenAssessSummary();
+}
+function updateBenAssessProgress(){
+  if(!benAssessCurrProj)return;
+  const answers=benAssessAnswers[benAssessCurrProj]||{};
+  const done=BEN_ASSESS_DEF.filter(dim=>{const a=answers[dim.key]||[];return a.length===dim.questions.length&&a.every(x=>x>0);}).length;
+  const total=BEN_ASSESS_DEF.length;
+  document.getElementById('ben-assess-prog-text').textContent=`${done} de ${total} dimensiones completadas`;
+  document.getElementById('ben-assess-prog-bar').style.width=`${(done/total*100).toFixed(0)}%`;
+  document.getElementById('ben-assess-apply-btn').disabled=(done<total);
+  document.getElementById('ben-assess-summary').style.display=done>0?'block':'none';
+}
+function updateBenAssessSummary(){
+  if(!benAssessCurrProj)return;
+  const answers=benAssessAnswers[benAssessCurrProj]||{};
+  const proj=BEN_PROJECTS.find(p=>p.id===benAssessCurrProj);
+  if(!proj)return;
+  document.getElementById('ben-assess-proj-name-sum').textContent=proj.name;
+  document.getElementById('ben-assess-sum-grid').innerHTML=BEN_ASSESS_DEF.map(dim=>{
+    const a=answers[dim.key]||[];
+    const done=a.length===dim.questions.length&&a.every(x=>x>0);
+    const score=done?dim.logic(a):null;
+    const cls=score===null?'':(['','s1','s2','s3','s4','s5'][Math.round(score)]||'');
+    return `<div class="assess-box"><div class="assess-box-name">${dim.name}</div><div class="assess-box-val ${cls}">${score===null?'—':score.toFixed(2)+'/5'}</div></div>`;
+  }).join('');
+}
+function applyBenAssessment(){
+  if(!benAssessCurrProj)return;
+  const answers=benAssessAnswers[benAssessCurrProj]||{};
+  const pi=BEN_PROJECTS.findIndex(p=>p.id===benAssessCurrProj);
+  if(pi<0)return;
+  BEN_ASSESS_DEF.forEach(dim=>{
+    const a=answers[dim.key]||[];
+    if(a.length===dim.questions.length&&a.every(x=>x>0)){
+      BEN_PROJECTS[pi].dims[dim.key]=dim.logic(a);
+    }
+  });
+  BEN_PROJECTS[pi].score=BEN_PROJECTS[pi].dims.reduce((s,d)=>s+d,0)/BEN_PROJECTS[pi].dims.length;
+  runBenPareto();
+  showBenTab('result',document.querySelector('#page-beneficio .pareto-tab'));
+  setTimeout(()=>alert(`✅ Evaluación aplicada al Análisis Beneficio para:\n${BEN_PROJECTS[pi].name}`),100);
+}
+
+// ══════════════════════════════════════════════════════════════
+// SCATTER CHART
+// ══════════════════════════════════════════════════════════════
+function renderScatterChart(){
+  dC('chart-scatter');
+  const ctx=document.getElementById('chart-scatter');
+  if(!ctx)return;
+  const catColors={edu:'#1B3A5C',env:'#1a5c3a',health:'#7B2D8B',emp:'#8B4513'};
+  const maxBudget=Math.max(...CART_PROJECTS.map(p=>p.actual));
+  const datasets=[
+    {key:'edu',label:'Educación'},
+    {key:'env',label:'Medio Ambiente'},
+    {key:'health',label:'Salud'},
+    {key:'emp',label:'Emprendimiento'},
+  ].map(g=>({
+    label:g.label,
+    data:CART_PROJECTS.filter(p=>p.cat===g.key).map(p=>({
+      x:p.bNorm,y:p.eNorm,
+      r:Math.max(6,Math.sqrt(p.actual/maxBudget)*40),
+      name:p.name,actual:p.actual
+    })),
+    backgroundColor:catColors[g.key]+'BB',
+    borderColor:catColors[g.key],
+    borderWidth:1.5,
+    pointStyle:'circle',
+  }));
+  rC('chart-scatter',new Chart(ctx,{
+    type:'bubble',
+    data:{datasets},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{position:'top',labels:{font:{size:11}}},
+        tooltip:{callbacks:{
+          title:v=>[v[0].raw.name],
+          label:v=>[`Beneficio: ${v.raw.x.toFixed(3)}`,`Escalabilidad: ${v.raw.y.toFixed(3)}`,`Presupuesto: $${v.raw.actual.toLocaleString('es-MX')} MXN`]
+        }},
+        annotation:{annotations:{
+          lineV:{type:'line',xMin:0.5,xMax:0.5,yMin:0,yMax:1,borderColor:'rgba(0,0,0,0.15)',borderWidth:1,borderDash:[5,5]},
+          lineH:{type:'line',yMin:0.5,yMax:0.5,xMin:0,xMax:1,borderColor:'rgba(0,0,0,0.15)',borderWidth:1,borderDash:[5,5]},
+        }}
+      },
+      scales:{
+        x:{min:0.2,max:1.05,title:{display:true,text:'Beneficio',font:{size:12}},ticks:{callback:v=>v.toFixed(2)},grid:{color:'rgba(0,0,0,0.05)'}},
+        y:{min:0,max:1.05,title:{display:true,text:'Escalabilidad',font:{size:12}},ticks:{callback:v=>v.toFixed(1)},grid:{color:'rgba(0,0,0,0.05)'}},
+      },
+      onClick:(e,els)=>{
+        if(!els.length)return;
+        const ds=datasets[els[0].datasetIndex];
+        const pt=ds.data[els[0].index];
+        console.log(pt.name);
+      }
+    }
+  }));
+  // Draw labels on canvas after render
+  setTimeout(()=>{
+    const chart=CR['chart-scatter'];
+    if(!chart)return;
+    const ctx2=chart.ctx;
+    CART_PROJECTS.forEach(p=>{
+      const meta=chart.getDatasetMeta(0);
+      // find matching dataset
+      const dsIdx=['edu','env','health','emp'].indexOf(p.cat);
+      const dm=chart.getDatasetMeta(dsIdx);
+      const dIdx=CART_PROJECTS.filter(x=>x.cat===p.cat).indexOf(p);
+      if(dm&&dm.data[dIdx]){
+        const el=dm.data[dIdx];
+        ctx2.save();
+        ctx2.fillStyle='#333';
+        ctx2.font='10px Segoe UI';
+        ctx2.fillText(p.name.split(' ').slice(0,2).join(' '),el.x+el.options.radius+3,el.y+3);
+        ctx2.restore();
+      }
+    });
+  },300);
+}
+
+// ══════════════════════════════════════════════════════════════
+// REDISTRIBUCIÓN
+// ══════════════════════════════════════════════════════════════
+function renderRedistribucion(){
+  const total=REDIST_PROJECTS.reduce((s,p)=>s+p.actual,0);
+  const totalNuevo=REDIST_PROJECTS.reduce((s,p)=>s+p.nuevo,0);
+  const cedentes=REDIST_PROJECTS.filter(p=>p.cambio<0);
+  const receptores=REDIST_PROJECTS.filter(p=>p.cambio>0);
+  document.getElementById('redist-kpi-row').innerHTML=`
+    <div class="redist-kpi"><div class="redist-kpi-label">Total portafolio</div><div class="redist-kpi-val">$${(total/1e6).toFixed(2)}M MXN</div></div>
+    <div class="redist-kpi"><div class="redist-kpi-label">Proyectos que ceden</div><div class="redist-kpi-val" style="color:var(--danger)">${cedentes.length}</div></div>
+    <div class="redist-kpi"><div class="redist-kpi-label">Proyectos que reciben</div><div class="redist-kpi-val" style="color:var(--teal)">${receptores.length}</div></div>
+    <div class="redist-kpi"><div class="redist-kpi-label">Mínimo operativo (60%)</div><div class="redist-kpi-val">${((REDIST_PROJECTS.reduce((s,p)=>s+p.minimo,0))/1e6).toFixed(2)}M MXN</div></div>
+    <div class="redist-kpi"><div class="redist-kpi-label">Portafolio propuesto</div><div class="redist-kpi-val">$${(totalNuevo/1e6).toFixed(2)}M MXN</div></div>`;
+
+  const catColors={edu:'#1B3A5C',env:'#1a5c3a',health:'#7B2D8B',emp:'#8B4513'};
+  const catNames={edu:'Educación',env:'Ambiente',health:'Salud',emp:'Emprendimiento'};
+  const sorted=[...REDIST_PROJECTS].sort((a,b)=>b.nuevo-a.nuevo);
+  document.getElementById('redist-body').innerHTML=sorted.map(p=>{
+    const cambioClass=p.cambio>=0?'cambio-pos':'cambio-neg';
+    const cambioStr=p.cambio>=0?`+$${Math.round(p.cambio).toLocaleString('es-MX')}`:`-$${Math.round(Math.abs(p.cambio)).toLocaleString('es-MX')}`;
+    const minOk=p.nuevo>=p.minimo?'<span class="min-ok">✓</span>':'<span class="min-fail">✗</span>';
+    const catBg={edu:'#E6F1FB',env:'#EAF3DE',health:'#FAEEDA',emp:'#EEEDFE'};
+    const catTx={edu:'#0C447C',env:'#27500A',health:'#633806',emp:'#3C3489'};
+    return `<tr>
+      <td><strong style="font-size:.79rem">${p.name}</strong></td>
+      <td><span style="background:${catBg[p.cat]||'#eee'};color:${catTx[p.cat]||'#333'};font-size:.67rem;font-weight:600;padding:2px 6px;border-radius:10px">${catNames[p.cat]||p.cat}</span></td>
+      <td>${p.bNorm.toFixed(3)}</td>
+      <td>${p.eNorm.toFixed(3)}</td>
+      <td>${p.magnitud.toFixed(4)}</td>
+      <td>${p.angulo.toFixed(2)}°</td>
+      <td>${p.factor.toFixed(4)}</td>
+      <td>${p.magAj.toFixed(4)}</td>
+      <td>$${p.actual.toLocaleString('es-MX')}</td>
+      <td>$${Math.round(p.minimo).toLocaleString('es-MX')}</td>
+      <td>$${Math.round(p.nuevo).toLocaleString('es-MX')}</td>
+      <td class="${cambioClass}">${cambioStr}</td>
+      <td>${minOk}</td>
+    </tr>`;
+  }).join('');
+
+  // Bar chart
+  dC('chart-redist-bar');
+  const ctx=document.getElementById('chart-redist-bar');
+  if(!ctx)return;
+  const labels=sorted.map(p=>p.name.length>20?p.name.slice(0,18)+'…':p.name);
+  rC('chart-redist-bar',new Chart(ctx,{
+    type:'bar',
+    data:{labels,datasets:[
+      {label:'Presupuesto Actual',data:sorted.map(p=>p.actual),backgroundColor:'rgba(45,95,138,0.7)',borderWidth:0,borderRadius:3},
+      {label:'Presupuesto Propuesto',data:sorted.map(p=>Math.round(p.nuevo)),backgroundColor:'rgba(15,110,86,0.7)',borderWidth:0,borderRadius:3},
+      {label:'Mínimo Operativo',data:sorted.map(p=>Math.round(p.minimo)),backgroundColor:'rgba(228,75,74,0.5)',borderWidth:0,borderRadius:3},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'top',labels:{font:{size:11}}},
+        tooltip:{callbacks:{label:v=>`${v.dataset.label}: $${v.raw.toLocaleString('es-MX')} MXN`}}},
+      scales:{x:{ticks:{font:{size:9},maxRotation:40,minRotation:30},grid:{display:false}},
+        y:{ticks:{font:{size:10},callback:v=>'$'+v.toLocaleString('es-MX')},grid:{color:'rgba(0,0,0,0.05)'},
+          title:{display:true,text:'MXN',font:{size:11},color:'#888'}}}}
+  }));
+}
+
+// ══════════════════════════════════════════════════════════════
+// NAV & PAGE ROUTING
+// ══════════════════════════════════════════════════════════════
+const PAGE_MAP={home:0,projects:1,pareto:2,beneficio:3,cartesiano:4,redistribucion:5,methodology:6};
+function showPage(p,filter){
+  document.querySelectorAll('.page').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(el=>el.classList.remove('active'));
+  document.getElementById('page-'+p)?.classList.add('active');
+  const idx=PAGE_MAP[p]??0;
+  document.querySelectorAll('.nav-tab')[idx]?.classList.add('active');
+  if(p==='projects'){
+    backToList();
+    const pills=document.querySelectorAll('.cat-pill');
+    if(filter==='edu'&&pills[1]) filterProjects('edu',pills[1]);
+    else if(filter==='env'&&pills[2]) filterProjects('env',pills[2]);
+    else if(filter==='health'&&pills[3]) filterProjects('health',pills[3]);
+    else if(filter==='emp'&&pills[4]) filterProjects('emp',pills[4]);
+    else if(pills[0]) filterProjects('all',pills[0]);
+  }
+  if(p==='home') setTimeout(()=>renderComparisonChart(currentSortMode),100);
+  if(p==='pareto') setTimeout(()=>runPareto(),50);
+  if(p==='beneficio') setTimeout(()=>runBenPareto(),50);
+  if(p==='cartesiano') setTimeout(()=>renderScatterChart(),50);
+  if(p==='redistribucion') setTimeout(()=>renderRedistribucion(),50);
+}
+function showParetoTab(name,btn){
+  document.querySelectorAll('#page-pareto .pareto-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('#page-pareto .pareto-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('ptab-'+name).classList.add('active');
+  if(btn) btn.classList.add('active');
+}
+function backToList(){
+  document.getElementById('proj-list-view').style.display='';
+  document.getElementById('proj-detail-view').style.display='none';
+}
+
+// ══ INIT ══
+function init(){
+  const sel=document.getElementById('assess-proj-sel');
+  sel.innerHTML='<option value="">— Selecciona un proyecto —</option>'+
+    PARETO_PROJECTS.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
+  renderAllCards();
+  renderComparisonChart('sroi');
+  runPareto();
+}
+document.addEventListener('DOMContentLoaded',init);
+</script>
+</body>
+</html>
